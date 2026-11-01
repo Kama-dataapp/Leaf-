@@ -1,0 +1,39 @@
+KAMIŚ 6.3 — INSTRUKCJA BEZPIECZNEJ AKTUALIZACJI
+================================================
+
+WERSJA PEŁNA
+Jeżeli nie masz pewności, które pliki znajdują się na GitHubie, pobierz paczkę KAMIS_6_3_PELNA.zip.
+Zawiera 14 plików aplikacji i tę instrukcję. Po rozpakowaniu wgraj wszystkie 14 plików aplikacji do głównego katalogu istniejącego repozytorium Leaf-.
+Nie umieszczaj ich w dodatkowym folderze. Nie usuwaj repozytorium.
+
+AKTUALIZACJA Z DZIAŁAJĄCEGO KAMIŚ 6.2
+1. Najpierw otwórz w aplikacji Zapisane i zrób kopię danych (Eksportuj kopię).
+2. Rozpakuj paczkę KAMIS_6_3_AKTUALIZACJA.zip.
+3. W repozytorium https://github.com/Kama-dataapp/Leaf- podmień istniejące pliki:
+   - index.html
+   - app.js
+   - features-v6.js
+   - features-v6_2.js
+   - sw.js
+   - manifest.webmanifest
+4. Dodaj nowe pliki (nie było ich w 6.2):
+   - features-v6_3.js
+   - features-v6_3.css
+5. Pozostałe pliki zachowaj: przepisy, zdjęcia, ikony i inne moduły.
+6. GitHub: Commit changes; sprawdź, czy GitHub Pages opublikował zmiany.
+7. Zamknij i ponownie otwórz aplikację. Po aktualizacji sprawdź zakładkę Ustawienia 6.3.
+
+UWAGA: nazwa aplikacji i ikona używają teraz nazwy KAMIŚ, również na iPhonie. Repozytorium GitHub nadal nazywa się Leaf- — to nie wpływa na nazwę na ekranie początkowym. Jeżeli dawny skrót nadal ma etykietę Liść, może być konieczna zmiana jego nazwy lub ponowne dodanie do ekranu początkowego. Przed zmianami wykonaj eksport danych. Nie używaj opcji czyszczenia danych witryny.
+
+FUNKCJE KAMIŚ 6.3
+- Dwa tryby: prosty (domyślny) i zaawansowany
+- Własne, opcjonalne cele porównawcze: energia i makroskładniki
+- Przybliżony dobór dań oraz skalowanie ilości składników w trybie zaawansowanym
+- Współdziałanie ze zaktualizowaną listą zakupów
+- Filtry wysokobiałkowe, wysokowęglowodanowe, niskowęglowodanowe, niskotłuszczowe
+- Opcjonalny wybór posiadanych urządzeń kuchennych
+- Dotychczasowe 603 przepisy, historię planów i pozostałe funkcje zachowano.
+
+WARTOŚCI ODŻYWCZE są szacunkowe i pochodzą z uproszczonej bazy składników, nie z etykiet producentów. Dopasowanie jest orientacyjne, nie narzuca limitów i nie zastępuje porady dietetycznej.
+
+W razie problemów z pobieraniem pliku ZIP — spróbuj na komputerze przez przeglądarkę lub poproś o pojedyncze pliki.
