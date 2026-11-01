@@ -1,0 +1,17 @@
+/* Dodatkowe style Kamiś 6.0. Podstawowy wygląd z wersji 5.0 pozostaje zachowany. */
+.v6-home .v6-feature{padding:14px;border:1px solid #e2e8dd;border-radius:14px;background:#fafcf9}
+.v6-feature h3{margin:3px 0 7px}.v6-feature p{min-height:36px}
+.v6-filter{display:flex;align-items:end;gap:14px;flex-wrap:wrap;margin:14px 0}
+.v6-filter .field{flex:1 1 200px;margin:0}.v6-filter .field span,.v6-time{font-size:13px;font-weight:700;color:#3d5848;display:block}
+.v6-time{min-width:175px;max-width:290px}.v6-time select{display:block;margin-top:6px;width:100%}
+.v6-cardactions{margin-top:12px;border-top:1px solid #e9eee4;padding-top:10px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.v6-mini{padding:8px 10px;font-size:12px}.v6-small{font-size:12px;color:#6a786d}
+.v6-stars{display:flex;flex-wrap:wrap;gap:7px}.v6-star{padding:10px;border:1px solid #b9cbbd;border-radius:9px;background:#f4f7ed;color:#355e49;font-size:14px}.v6-star.selected{background:#1f563f;color:#fff}
+.v6-recipeextras{border-top:1px solid #e2e8dd;padding-top:16px;margin-top:17px}
+.v6-prepitem{border:1px solid #dde8dc;border-radius:14px;background:#fbfdf9;padding:15px;margin:13px 0}
+.v6-warning{color:#985a15;font-size:12px}.v6-success{color:#297354;font-size:12px}
+.v6-extraactions{border-top:1px solid #e1e8dc;padding-top:13px}
+.v6-cook .v6-instruction{font-size:clamp(20px,4vw,26px);line-height:1.65;background:#f0f6e8;padding:22px;border-radius:16px;min-height:140px}
+.v6-progress{height:8px;border-radius:8px;background:#e8efe4;overflow:hidden;margin:16px 0}.v6-progress div{height:100%;background:#45805c;transition:width .2s}
+.v6-clock{margin:24px 0;border:1px solid #cbded1;border-radius:18px;padding:20px}.v6-clocktime{font-size:clamp(42px,10vw,68px);font-variant-numeric:tabular-nums;text-align:center;font-weight:800;letter-spacing:2px;color:#1a5138;margin:12px 0}.v6-clocktime.v6-done{color:#a35420}
+@media(max-width:480px){.v6-filter{display:block}.v6-time{margin:12px 0 0;max-width:none}.v6-recipeextras .btn{width:100%}.v6-cook .actions>.btn{flex:1}}
