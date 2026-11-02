@@ -1,0 +1,8 @@
+/* Kamiś 6.4 — tylko nowe elementy interfejsu */
+.v64-days,.v64-review{margin:16px 0;padding:14px;border-radius:15px;background:#f1f8ee;border:1px solid #d6e9d1}
+.v64-day{padding:13px 0;border-top:1px solid #d9e7d4}.v64-dayhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.v64-dayhead .pill{white-space:nowrap}.v64-mealchips{display:flex;flex-wrap:wrap;gap:6px}.v64-mealchips .chip{font-size:13px;padding:9px 11px}
+.v64-goals{margin:12px 0}.v64-review>div{padding:5px 0;font-size:13px;line-height:1.5}
+.v64-macroselect{width:100%;min-width:0;padding:11px;border:1px solid #bacfbd;border-radius:9px;background:white;font-size:15px}
+.v64-updates ul{padding-left:20px}.v64-updates li{margin:7px 0;line-height:1.45}.v64-load{padding:13px;margin:12px 0;background:#f4f8f0;border-radius:12px}.v64-load label{font-weight:650}.v64-load select{margin-top:7px}
+@media(max-width:500px){.v64-days{padding:10px}.v64-dayhead{align-items:flex-start}.v64-mealchips .chip{font-size:12px;padding:9px}}
