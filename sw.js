@@ -1,6 +1,6 @@
 /* Kamiś 2.0 — local-first shell for offline usage */
-const CACHE='kamis-2.0-20261102';
-const ASSETS=['./','./index.html','./app.js','./recipes-v6_1.js','./recipes-v6_4.js','./recipes-v2.js','./features-v6.js','./features-v6.css','./features-v6_2.js','./features-v6_2.css','./features-v6_3.js','./features-v6_3.css','./features-v6_4.js','./features-v6_4.css','./features-v2.js','./features-v2.css','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
+const CACHE='kamis-2.2.1-20261103';
+const ASSETS=['./','./index.html','./app.js','./recipes-v6_1.js','./recipes-v6_4.js','./recipes-v2.js','./features-v6.js','./features-v6.css','./features-v6_2.js','./features-v6_2.css','./features-v6_3.js','./features-v6_3.css','./features-v6_4.js','./features-v6_4.css','./features-v2.js','./features-v2.css','./features-v2_2.js','./features-v2_2.css','./features-v2_2_1.js','./features-v2_2_1.css','./photos-v2_2.js','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('kamis-')&&key!==CACHE).map(key=>caches.delete(key)))));self.clients.claim()});
 self.addEventListener('fetch',event=>{const req=event.request,url=new URL(req.url);if(req.method!=='GET'||url.origin!==self.location.origin)return;event.respondWith(fetch(req).then(res=>{if(res.ok){const copy=res.clone();caches.open(CACHE).then(cache=>cache.put(req,copy)).catch(()=>{});}return res}).catch(async()=>await caches.match(req)||await caches.match('./index.html')||Response.error()))});

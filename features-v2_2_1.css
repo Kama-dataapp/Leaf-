@@ -1,0 +1,25 @@
+/* Kamiś 2.2.1 — dodatkowe, opcjonalne elementy planowania */
+.k221-macro{display:block;padding:12px;border:1px solid #d9e5dc;border-radius:12px;background:#f8fbf7;margin:8px 0}
+.k221-label{font-weight:700;margin-bottom:9px;color:#173d32}
+.k221-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.k221-choices .chip{padding:10px 6px;text-align:center;white-space:normal;font-size:.85rem;min-height:43px}
+.k221-own{display:block;margin-top:12px;font-size:.9rem}
+.k221-own input{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #bdd0c1;border-radius:9px}
+.k221-note{grid-column:1/-1;padding:9px 0;margin:4px 0}
+.k221-profiles{margin-top:14px}
+.k221-newprofile{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:10px 0}
+.k221-newprofile input{min-width:0;padding:10px;border-radius:10px;border:1px solid #c7d6c9}
+.k221-profilelist{display:grid;gap:8px}
+.k221-profilelist>div{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:9px;border:1px solid #dce9df;border-radius:10px}
+.k221-profilelist span{flex:1;min-width:120px;font-weight:600}
+.k221-profilelist .btn{padding:8px 11px}
+.k221-why{display:block;margin-top:7px;color:#406f56;font-size:.78rem;line-height:1.5}
+.k221-recipeinfo{padding:13px;margin:14px 0;border:1px solid #bcd4c1;border-radius:11px;background:#f5faf6;font-size:.88rem}
+.k221-uncertain{color:#8c6320;border:1px solid #ead8aa;border-radius:20px;padding:4px 7px;font-size:.73rem}
+.k221-pref-summary{margin-top:10px;padding:7px;border-radius:8px;background:#e5eee7;font-size:.9rem}
+@media(max-width:380px){.k221-newprofile{grid-template-columns:1fr}.k221-choices{grid-template-columns:1fr 1fr}}
+@media(prefers-color-scheme:dark){.k221-macro,.k221-recipeinfo{background:#20382f;border-color:#3e6250;color:#e9f7ec}.k221-label{color:#ccefd8}.k221-own input,.k221-newprofile input{color:#fff;background:#22362d;border-color:#496e55}.k221-pref-summary{background:#274836}}
+/* Pełna szerokość dla czterech wyborów — bez ucinania na telefonach */
+.v63-fieldgrid .k221-macro{grid-column:1 / -1;min-width:0}
+.v63-fieldgrid .k221-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+.v63-fieldgrid .k221-choices .chip{width:100%;min-width:0;overflow-wrap:anywhere}
