@@ -83,15 +83,15 @@ function itemCategory(name){
  const s=lower(name);
  if(/kurcz|indy|wołow|wolow|wieprz|mielon|kielbas|wędl|szynk|łoso|ryb|tuńczy|tunczyk/.test(s))return 'Mięso i ryby';
  if(/jogurt|mlek|śmietan|ser|twar|skyr|masło|maslo|kefir|jaj/.test(s))return 'Nabiał i jajka';
- if(/ryz|ryż|makaron|kasz|platk|płatk|mąk|mak|chleb|buł|bul|tortilla|pita/.test(s))return 'Pieczywo i produkty suche';
- if(/olej|oliw|cynamon|sol|sól|pieprz|papryk.*(słod|wędz)|kumin|kurkum|imbir|oregano|majeran|musztard|ocet|przypraw|sos/.test(s))return 'Przyprawy i dodatki';
+ if(/ryz|ryż|makaron|kasz|platk|płatk|mąk|mak|chleb|buł|tortilla|pita/.test(s))return 'Pieczywo i produkty suche';
+ if(/olej|oliw|cynamon|sol|sól|pieprz|papryk.*(słod|wędz)|kumin|kurkum|imbir|oregano|majeran|musztard|ocet|kakao|przypraw|sos/.test(s))return 'Przyprawy i dodatki';
  if(/jabł|jabl|trusk|malin|banan|borów|borow|cytryn|limonk|pomidor|cebula|cebul|czosn|papryk|broku|marchew|ziemniak|ogór|ogor|szpinak|sałat|salat|cukini|dyni|awok|bruk|grusz|grzyb|pieczark|fasol|ciecierzyc|kukurydz/.test(s))return 'Warzywa i owoce';
  return 'Pozostałe produkty';
 }
 shopping=function(){const html=prev.shopping();if(!data.plan)return html;
  const container=document.createElement('div');container.innerHTML=html;
- const labels=[...container.querySelectorAll('label.shopping')];if(!labels.length)return html;
- const groups=new Map();for(const label of labels){const title=label.querySelector('b')?.textContent||label.querySelector('.item')?.textContent||'';const cat=itemCategory(title);if(!groups.has(cat))groups.set(cat,[]);groups.get(cat).push(label);}
+ const products=[...container.querySelectorAll('.v62-shopitem')];if(!products.length)return html;
+ const groups=new Map();for(const product of products){const label=product.querySelector('label.shopping');const title=label?.querySelector('b')?.textContent||label?.querySelector('.item')?.textContent||'';const cat=itemCategory(title);if(!groups.has(cat))groups.set(cat,[]);groups.get(cat).push(product);}
  const section=container.querySelector('section.panel')||container;
  const anchor=document.createElement('div');anchor.className='k23-shoppinggroups';
  const order=['Warzywa i owoce','Mięso i ryby','Nabiał i jajka','Pieczywo i produkty suche','Przyprawy i dodatki','Pozostałe produkty'];
