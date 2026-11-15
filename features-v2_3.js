@@ -39,7 +39,7 @@ function stepIngredients(r,step){
 function quantity(x){
  let q=round(Number(x[1])||0)*(Number(data.people)||1);
  const label=x[0];
- const unit=/jajka?$/i.test(label)?(q>=40?`ok. ${round(q/55)} szt. (${round(q)} g)`:`${q} g`):`${q} g`;
+ const unit=/jajka?$/i.test(label)&&Number(x[1])<=12?`${q} szt.`:`${q} g`;
  const garlic=/czosnek/i.test(label)?` (około ${Math.max(1,Math.round(q/4))} ząbki/ząbków, zależnie od wielkości)` : '';
  return `${label.toLocaleLowerCase('pl')} — ${unit}${garlic}`;
 }
@@ -55,19 +55,13 @@ function enhancedSteps(r){
    const q=items.map(quantity).join('; ');
    s=`${s.replace(/[.\s]+$/,'')}. W tym etapie przygotuj: ${q}.`;
   }
-  // Do not invent arbitrary frying durations for beef stew or larger cuts.
-  if(/smaż|podsmaż/i.test(s)&&!/\d+\s*(?:–|-)?\s*\d*\s*min/i.test(s)){
-   s+=' Smaż na umiarkowanym ogniu i obserwuj stopień przygotowania; czas zależy od wielkości kawałków.';
-  }
-  if(/gotuj|duś|piec|piecz/i.test(s)&&!/\d+\s*(?:–|-)?\s*\d*\s*min/i.test(s)){
-   s+=' Czas przygotowania zależy od produktu i urządzenia; sprawdź konsystencję oraz gotowość.';
-  }
+  // Zachowujemy tylko konkretną instrukcję z bazy, bez mechanicznego dopisywania uwag o czasie.
   result.push(s);
  }
  const combined=all.map(x=>lower(x[0])).join(' ');
  if(/kurcz|indyk|dr[oó]b/.test(combined))result.push('Sprawdź termometrem kuchennym, że drób osiągnął co najmniej 74°C w środku.');
  if(/mielon/.test(combined))result.push('Mięso mielone przygotuj do bezpiecznej temperatury wewnętrznej; dla drobiowego co najmniej 74°C.');
- result.push('Podawaj na czystym talerzu. Czas i temperatura podane w przepisie są orientacyjne; kieruj się również wyglądem dania i bezpieczeństwem żywności.');
+ result.push('Sprawdź, czy danie ma oczekiwaną konsystencję i jest bezpiecznie przygotowane.');
  return result;
 }
 detailedSteps=enhancedSteps;

@@ -25,7 +25,7 @@ function consistency(r){const z=category(r);const dict={
  omelette:[['Przed smażeniem','Masa jajeczna powinna być jednolita, bez oddzielonej warstwy wody.'],['Pod koniec smażenia','Omlet ma tworzyć jeden ścięty placek; środek nie powinien być płynny. Nie mieszaj go jak jajecznicy.']],
  pancake:[['Przed smażeniem','Masa powinna być gęstsza od ciasta naleśnikowego i spływać z łyżki powoli; odstaw ją na kilka minut, jeśli używasz płatków.'],['Przy przewracaniu','Wierzch powinien częściowo się ściąć, brzegi być stabilne, a spód rumiany. Obracaj raz, szeroką łopatką.']],
  dessert:[['Po zmiksowaniu','Masa powinna być jednolita, bez dużych grudek. Jeśli jest bardzo rzadka, schłodź ją i oceń ponownie.'],['Przed podaniem','Krem lub mus powinien utrzymywać się na łyżce; nie każdy deser zgęstnieje jak budyń.']],
- bake:[['Przed pieczeniem','Sprawdź, czy masa jest równomiernie wymieszana i rozłożona w naczyniu.'],['Po pieczeniu','Środek musi być odpowiednio dopieczony; czas zależy od wielkości formy i urządzenia.']],
+ bake:[['Przed pieczeniem','Sprawdź, czy masa jest równomiernie wymieszana i rozłożona w naczyniu.'],['Po pieczeniu','Sprawdź środek wykałaczką: nie powinna być oblepiona surowym ciastem.']],
  cold:[['Przed składaniem','Warzywa i wilgotne składniki osusz, aby pieczywo lub tortilla nie rozmiękły.'],['Przy podaniu','Dodatki powinny trzymać się razem i zachować świeżą teksturę.']],
  main:[['Podczas obróbki','Kontroluj poziom płynu i stopień miękkości składników zgodnie z przepisem.'],['Przed podaniem','Sprawdź, czy składniki są równomiernie gotowe; użyj termometru do mięsa i ryb.']]};
  return dict[z];
