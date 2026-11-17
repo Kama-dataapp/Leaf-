@@ -914,12 +914,12 @@ function setupInputs(){document.addEventListener('focusin',e=>{if(isTypingInFiel
 
 // 💭 Marlenka's editable thoughts. Notes stay local unless SHE explicitly shares a link.
 const THOUGHTS_KEY='marlenka-personal-thoughts-v1', RECEIVED_KEY='marlenka-inbox-thoughts-v1';
-const MEMORY_NAMES={room:'Różowy Pokój',town:'Miasteczko Serc',alley:'Aleja Wspomnień',drive:'Powrót z zawodów',study:'Korki z matematyki',birthday:'Osiemnastka Szymona'};
+const MEMORY_NAMES={room:'Różowy Pokój',town:'Miasteczko Serc',alley:'Aleja Wspomnień',drive:'Powrót z zawodów',study:'Korki z matematyki',birthday:'Osiemnastka Szymona',act3:'Akt III — McDonald'};
 const safeJson=(key,otherwise)=>{try{const data=JSON.parse(localStorage.getItem(key)||'null');return data&&typeof data==='object'&&!Array.isArray(data)?data:otherwise}catch(e){return otherwise}};
 let personalThoughts=safeJson(THOUGHTS_KEY,{}),receivedThoughts=safeJson(RECEIVED_KEY,{}),thoughtLastKey=null,thoughtReturn=null;
-function thoughtSceneKey(){const scene=MEMORY_NAMES[state.scene]?state.scene:'room';if(['drive','study','birthday'].includes(scene))return scene+':'+state[scene].stage;return scene}
+function thoughtSceneKey(){const scene=MEMORY_NAMES[state.scene]?state.scene:'room';if(scene==='act3')return 'act3:'+state.act3.phase;if(['drive','study','birthday'].includes(scene))return scene+':'+state[scene].stage;return scene}
 function thoughtContext(){const key=thoughtSceneKey(),scene=state.scene,part=['drive','study','birthday'].includes(scene),label=MEMORY_NAMES[scene]||MEMORY_NAMES.room;
- return {key,title:part?`${label} · ${$('memoryTitle').textContent||'Wspomnienie'}`:label}}
+ return {key,title:scene==='act3'?(label+' · '+act3Quest().title):part?`${label} · ${$('memoryTitle').textContent||'Wspomnienie'}`:label}}
 function persistThoughts(){try{localStorage.setItem(THOUGHTS_KEY,JSON.stringify(personalThoughts));return true}catch(e){return false}}
 function persistInbox(){try{localStorage.setItem(RECEIVED_KEY,JSON.stringify(receivedThoughts));return true}catch(e){return false}}
 function thoughtButton(label,action,primary=false){const b=document.createElement('button');b.type='button';b.textContent=label;if(primary)b.className='primary';b.addEventListener('click',action);$('thoughtActions').appendChild(b);return b}
