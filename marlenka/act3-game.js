@@ -7,21 +7,24 @@ const $=id=>document.getElementById(id);
 const W=2450,H=1500,IW=1900,IH=1240;
 const start=()=>({zone:'outside',x:363,y:908,phase:0,met:[],olejek:false,fooled:false,finished:false,firstVisit:true,reward:false,thought:''});
 let st;try{st=Object.assign(start(),JSON.parse(localStorage.getItem(KEY)||'{}'));if(!['outside','inside'].includes(st.zone))st.zone='outside'}catch(e){st=start()}
-let active=false,dialogue=null,keys=new Set(),goal=null,canvas,ctx,pane,minimap,quest,dlg,who,body,actions,toast,thoughts,notes,camX=0,camY=0,last=0,clock=0,prevOverflow='',previousStartHidden=true;
+let active=false,dialogue=null,dialogueHistory=[],keys=new Set(),goal=null,canvas,ctx,pane,minimap,quest,dlg,who,body,actions,toast,thoughts,notes,camX=0,camY=0,last=0,clock=0,prevOverflow='',previousStartHidden=true;
 const friendly={marlena:'Marlenka',kamis:'Kamiś',szymon:'Szymon',piasek:'Piasek',natalka:'Natalka',karolina:'Karolina'};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
 function distance(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
 function clamp(a,min,max){return Math.max(min,Math.min(max,a))}
 function hint(t){toast.textContent=t;toast.hidden=false;clearTimeout(hint.timer);hint.timer=setTimeout(()=>{toast.hidden=true},3200)}
 function say(name,text,choices){
+ if(dialogue)dialogueHistory.push(dialogue);else dialogueHistory=[];
  dialogue={name,text,choices:choices||[['Dalej →',dismiss]]};keys.clear();goal=null;drawDialogue();
 }
-function dismiss(){dialogue=null;dlg.hidden=true}
+function dismiss(){dialogue=null;dialogueHistory=[];dlg.hidden=true}
+function previousDialogue(){if(!dialogueHistory.length)return;dialogue=dialogueHistory.pop();drawDialogue()}
 function beat(name,text,next){say(name,text,[['Dalej →',next||dismiss]])}
 function drawDialogue(){
  dlg.hidden=!dialogue;if(!dialogue)return;
  who.textContent=dialogue.name;body.textContent=dialogue.text;
  actions.replaceChildren();
+ if(dialogueHistory.length){const back=document.createElement('button');back.type='button';back.textContent='← Poprzedni dialog';back.style.background='#eee0ea';back.style.color='#76546f';back.addEventListener('click',previousDialogue);actions.append(back)}
  dialogue.choices.forEach((a,i)=>{let b=document.createElement('button');b.textContent=a[0];b.type='button';b.addEventListener('click',a[1]);actions.append(b)});
 }
 function step(n){st.phase=Math.max(st.phase,n);save();hud()}
