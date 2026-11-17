@@ -1016,7 +1016,7 @@ async function saveThought(entry){
 async function syncLocal(){if(!isMarlena())return;const entries=window.MarlenkaThoughts?.local()||[];let ok=0,failed=0;for(const entry of entries){const current=remoteRows.find(row=>row.scene_key===entry.key);if(current&&Date.parse(current.updated_at)>=Date.parse(entry.edited||''))continue;const result=await saveThought(entry);result.ok?ok++:failed++}await loadMine();renderPanel();para(`Wysłano ${ok} lokalnych wpisów. Błędy: ${failed}.`,'account-note')}
 async function signIn(e){e.preventDefault();if(!client)return;const input=$('accountEmail');const email=input?.value?.trim().toLowerCase();if(!email)return;const b=$('emailSignIn');b.disabled=true;b.textContent='Wysyłam link…';
  const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
- b.disabled=false;b.textContent='Wyślij link logowania';para(error?'Nie udało się: '+error.message:'Sprawdź skrzynkę pocztową. Link logowania otworzy Marlenkę na Twoim koncie.','account-note')
+ b.disabled=false;b.textContent='Wyślij link logowania';const smtpIssue=error&&(/email_address_not_authorized/i.test(String(error.code||''))||/email address not authorized/i.test(String(error.message||'')));para(error?(smtpIssue?'Wysyłka e-mail wymaga włączenia własnego serwera SMTP w projekcie Supabase.':('Nie udało się: '+error.message)):'Sprawdź skrzynkę pocztową. Link logowania otworzy Marlenkę na Twoim koncie.','account-note')
 }
 async function logout(){if(!client)return;await client.auth.signOut();user=null;member=null;remoteRows=[];setStatus();renderPanel()}
 function renderPanel(){const b=body();b.replaceChildren();
