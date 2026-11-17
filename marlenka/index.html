@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <meta name="description" content="Marlenka 💞 — gra o wspomnieniach. Rozdział I, powrót z zawodów, korki, osiemnastka i nowy otwarty świat w Akcie III: McDonald.">
-  <title>Marlenka 💞 — Akt III: Otwarty świat 1.1</title>
+  <title>Marlenka 💞 — Akt III po poprawkach 1.2</title>
   <link rel="stylesheet" href="./act3-world.css">
   
   <style>
@@ -984,7 +984,7 @@ function act3Objects(){
   o('a3natalka','Natalka',3,7),o('a3karolina','Karolina',12,6)
  ];
 }
-function act3CanWalk(){return true}
+function act3CanWalk(x,y){if(state.act3.zone==='street')return !(x>=9&&x<=13&&y<=3)&&!(x>=2&&x<=4&&y===8);if(state.act3.zone==='inside')return !(x>=9&&x<=13&&y<=2)&&!(x>=6&&x<=8&&y>=5&&y<=6);return true}
 function act3Quest(){
  const content=[
  ['01','Pomysł Marlenki','Rozmowa w samochodzie przed spotkaniem.','a3door'],
