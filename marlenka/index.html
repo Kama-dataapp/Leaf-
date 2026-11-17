@@ -1059,7 +1059,7 @@ function act3Perspective(){
  modal('Dwie perspektywy 💞','PO WYJŚCIU Z McDONALDA');
  para('To literacka interpretacja wspomnienia. Prawdziwe myśli Marlenki może dopisać tylko ona.');
  addAction('💛 Jak widział to Kamiś',()=>{modal('Myśli Kamisia 💛','INTERPRETACJA');para('To miał być zwykły Mak ze znajomymi, a znów udało nam się zrobić z tego coś naszego. Kiedy Szymon zapytał o Marlenkę i uwierzył w żart, nie mogłem przestać się uśmiechać.');addAction('← Wróć do gry',closeModal,true)});
- addAction('🌷 Jak mogła widzieć to Marlenka',()=>{modal('Perspektywa Marlenki 🌷','DO UZUPEŁNIENIA PRZEZ MARLENKĘ');para('To ona zaproponowała dalsze udawanie związku. Wspólny wypad, żarty i rozmowa po wszystkim mogą zostać zapisane z jej prawdziwej perspektywy. Nie przypisujemy jej nieznanych uczuć.');addAction('💭 Dopisz własne myśli',()=>{closeModal();openThoughtEditor({key:'act3:10',title:'Akt III — po McDonaldzie: moje myśli'})},true);addAction('← Wróć do gry',closeModal)});
+ addAction('🌷 Jak mogła widzieć to Marlenka',()=>{modal('Perspektywa Marlenki 🌷','DO UZUPEŁNIENIA PRZEZ MARLENKĘ');para('To ona zaproponowała dalsze udawanie związku. Wspólny wypad, żarty i rozmowa po wszystkim mogą zostać zapisane z jej prawdziwej perspektywy. Nie przypisujemy jej nieznanych uczuć.');if(thoughtSceneComplete())addAction('💭 Dopisz własne myśli po scenie',()=>{closeModal();openThoughtEditor({key:'act3:12',title:'Akt III — po McDonaldzie: moje myśli'})},true);addAction('← Wróć do gry',closeModal)});
  addAction('Wróć do gry',closeModal,true)
 }
 function act3Finish(){
@@ -1070,6 +1070,7 @@ function act3Finish(){
  modal('Akt III ukończony 💞','WSPOMNIENIE ZAPISANE');
  para('Wyjazd do McDonalda dobiegł końca. Szymon dał się nabrać na Wasz żart, a Ty jako Marlenka porozmawiałaś z Kamisiem przed rozjazdem.');
  addAction('📖 Dwie perspektywy',act3Perspective);
+ addAction('💭 Dopisz myśli po zakończeniu sceny',()=>{closeModal();openThoughtEditor({key:'act3:12',title:'Akt III — po McDonaldzie: moje myśli'})});
  addAction('📐 Następna scena: Korki u Kamisia',()=>{closeModal();startAct4()},true);
  addAction('Wróć na mapę',closeModal);
 }
@@ -1328,7 +1329,7 @@ function renderAct4UI(){
   {who:'Kamiś',icon:'😏',title:'Profesor Kamiś i jego metody',text:a.humor==='genius'?'Kamiś ogłasza, że jego poziom geniuszu matematycznego jest trudny do zmierzenia. Marlenka może to skomentować tylko spojrzeniem.':'Kamiś próbuje zachować poważną minę nauczyciela, ale wciąż rzuca żartem. Jak tu się uczyć, kiedy nawet wzory są pretekstem do śmiechu?'},
   {who:'Marlenka i Kamiś',icon:'➗',title:'Matematyka na serio',text:'Żarty żartami, ale tu rzeczywiście uczycie się sporo. Nowa łamigłówka: połowa liczby i jeszcze 7 dają 15. Jaka to liczba?'},
   {who:'Narrator',icon:'📚',title:'Jeszcze jedno równanie',text:'Zeszyt zapełnia się obliczeniami. Sprawdź, czy Marlenka rozwiąże także 5(x − 2) = 20. Matematykę trzeba jednak potraktować porządnie — nawet z Kamisiem.'},
-  {who:'Dwie perspektywy',icon:'💭',title:'Tego dnia — dwa spojrzenia',text:a.view==='kamis'?'Perspektywa Kamisia (rekonstrukcja): chciał pomóc Marlenie z matematyką, ale zapamiętał również wszystkie żarty, swobodę i to, jak dobrze spędzało mu się z nią czas.':'Perspektywa Marlenki: spędziła z Kamisiem długi czas nad matematyką i żartami. Jak naprawdę zapamiętała to spotkanie, może dopisać własnymi słowami w „Moich myślach”.'},
+  {who:'Dwie perspektywy',icon:'💭',title:'Tego dnia — dwa spojrzenia',text:a.view==='kamis'?'Perspektywa Kamisia (rekonstrukcja): chciał pomóc Marlenie z matematyką, ale zapamiętał również wszystkie żarty, swobodę i to, jak dobrze spędzało mu się z nią czas.':'Perspektywa Marlenki: spędziła z Kamisiem długi czas nad matematyką i żartami. Jak naprawdę zapamiętała to spotkanie, może dopisać własnymi słowami po zakończeniu sceny.'},
   {who:'Narrator',icon:'📅',title:'A może kolejne korki?',text:'Po pierwszych korepetycjach umawiacie się na następne. I na kolejne. Z pozoru chodzi tylko o matematykę, ale wspólny czas powtarza się coraz częściej.'},
   {who:'Narrator',icon:'🎓',title:'Studia nie należą do łatwych',text:'Kamiś ma trudne, wymagające studia i wiele obowiązków. Mimo tego co weekend wraca do Marlenki, choćby po to, by przez kilka chwil pomóc jej z matematyką.'},
   {who:'Marlenka i Kamiś',icon:'🗓️',title:'Kolejny weekend… i następny',text:'Wspólne korki stają się małą tradycją: powrót, matematyka, żarty, następne zadania i następne spotkanie. I tak tydzień po tygodniu.'},
@@ -1384,7 +1385,7 @@ function renderAct4UI(){
   driveOption('🔁 Powtórz opowieść o weekendach',()=>{a.stage=0;renderAct4UI();save()});
   driveOption('🍟 Wróć do McDonalda',startAct3,true);
  }
- $('memoryNote').textContent=st>=7&&st<=11?'Mimo wymagających studiów Kamiś co weekend wracał do Marlenki na matematykę — a żartów było jeszcze więcej niż zadań.':st===12?'Wspomnienie zapisane. Można dopisywać myśli i wracać do kolejnych weekendów.':'Dużo matematyki, jeszcze więcej żartów. Możesz cofnąć dialog albo dopisać prawdziwe myśli Marlenki.';
+ $('memoryNote').textContent=st>=7&&st<=11?'Mimo wymagających studiów Kamiś co weekend wracał do Marlenki na matematykę — a żartów było jeszcze więcej niż zadań.':st===12?'Wspomnienie zapisane. Można dopisywać myśli i wracać do kolejnych weekendów.':'Dużo matematyki, jeszcze więcej żartów. Możesz cofnąć dialog. Myśli Marlenki dopiszesz po zakończeniu całej sceny.';
  refreshThoughtSnippet();
 }
 function act4Scene(time){
