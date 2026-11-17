@@ -898,7 +898,7 @@ function driveScene(time){
 function targetMarkers(time){const q=currentQuest();for(const id of q.target){const o=sceneObjects().find(p=>p.id===id)||byId[id];if(!o)continue;const x=(o.x+.5)*TILE,y=(o.y-.2)*TILE;const h=10*Math.sin(time/340);ellipse(x,y+27,18,6,'#b9689c40');ellipse(x,y+h,21,21,'#fff7eb');ellipse(x,y+h,17,17,'#f2a6cc');emoji('✦',x,y+h+1,24)} }
 function render(time){elapsed=time;const mobile=matchMedia('(max-width: 600px)').matches,nw=mobile?576:960,nh=mobile?720:640;if(viewW!==nw||viewH!==nh){viewW=nw;viewH=nh;canvas.width=nw;canvas.height=nh}else if(canvas.width!==nw){canvas.width=nw;canvas.height=nh}
  cameraX=W>=viewW?Math.max(0,Math.min(W-viewW,(player.x+.5)*TILE-viewW/2)):(W-viewW)/2;cameraY=H>=viewH?Math.max(0,Math.min(H-viewH,(player.y+.5)*TILE-viewH/2)):(H-viewH)/2;
- ctx.clearRect(0,0,viewW,viewH);ctx.fillStyle='#f6deeb';ctx.fillRect(0,0,viewW,viewH);if(['drive','study','birthday','act4'].includes(state.scene))cameraX=(W-viewW)/2;ctx.save();ctx.translate(-cameraX,-cameraY);if(state.scene==='act4')act4Scene(time);else if(state.scene==='act3')act3Scene(time);else if(state.scene==='birthday')birthdayScene(time);else if(state.scene==='study')studyScene(time);else if(state.scene==='drive')driveScene(time);else if(state.scene==='town')townScene(time);else if(state.scene==='alley')alleyScene(time);else{sceneBackground();furniture();catDraw(time)}if(!['drive','study','birthday','act4'].includes(state.scene)){if(state.scene==='act3'){if(state.act3.zone!=='car'){if((state.act3.phase>=5&&state.act3.phase<=8)||state.act3.zone==='goodbye')act3Person((player.fromX+(player.x-player.fromX)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,(player.fromY+(player.y-player.fromY)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,'kamis',1);else characterDraw(time)}}else characterDraw(time);targetMarkers(time)}ctx.restore();
+ ctx.clearRect(0,0,viewW,viewH);ctx.fillStyle='#f6deeb';ctx.fillRect(0,0,viewW,viewH);if(['drive','study','birthday','act4'].includes(state.scene))cameraX=(W-viewW)/2;ctx.save();ctx.translate(-cameraX,-cameraY);if(state.scene==='act4')act4Scene(time);else if(state.scene==='act3')act3Scene(time);else if(state.scene==='birthday')birthdayScene(time);else if(state.scene==='study')studyScene(time);else if(state.scene==='drive')driveScene(time);else if(state.scene==='town')townScene(time);else if(state.scene==='alley')alleyScene(time);else{sceneBackground();furniture();catDraw(time)}if(!['drive','study','birthday','act4'].includes(state.scene)){if(state.scene==='act3'){if(state.act3.zone!=='car'){if(state.act3.phase>=5&&state.act3.phase<=8)act3Person((player.fromX+(player.x-player.fromX)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,(player.fromY+(player.y-player.fromY)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,'kamis',1);else characterDraw(time)}}else characterDraw(time);targetMarkers(time)}ctx.restore();
  if(!isLocked()){
   if(path.length&&time-lastStep>155){const next=path.shift();const dx=next[0]-player.x,dy=next[1]-player.y;const dir=Object.keys(dirs).find(k=>dirs[k][0]===dx&&dirs[k][1]===dy);if(dir)step(dir);else path=[];if(!path.length&&path.targetObject){const id=path.targetObject;delete path.targetObject;setTimeout(()=>{if(!isLocked()&&((sceneObjects().find(o=>o.id===id)||byId[id])&&distance(sceneObjects().find(o=>o.id===id)||byId[id])<=1.75))interact(id)},180)}}
   else if(pressed.size&&time-lastStep>165){const dir=[...pressed].at(-1);if(dirs[dir]){path=[];step(dir)}}
@@ -976,7 +976,7 @@ function act3Objects(){
  const z=state.act3.zone,p=state.act3.phase;
  const o=(id,name,x,y)=>({id,name,x,y,hx:x-.7,hy:y-1.1,hw:1.5,hh:2});
  if(z==='car')return [o('a3door','Drzwi samochodu',11,6)];
- if(z==='goodbye')return [o('a3marlena','Marlenka — porozmawiaj',8,5),o('a3farewell','Pożegnanie przy autach',4,7)];
+ if(z==='goodbye')return [o('a3kamis','Kamiś — porozmawiaj',8,5),o('a3farewell','Pożegnanie przy autach',4,7)];
  if(z==='street')return [o('a3entry','Wejście do McDonalda',11,4),o('a3car','Samochód',3,7)].concat(p===7?[o('a3road','Szymon',8,6)]:[]);
  return [
   o('a3order','Kasa — zamów jedzenie',11,3),o('a3table','Wspólny stolik',7,6),o('a3exit','Wyjście z McDonalda',7,8),
@@ -996,7 +996,7 @@ function act3Quest(){
  ['08','Pytanie Szymona','W drodze powrotnej Szymon chce o coś zapytać.','a3road'],
  ['09','Wracajcie do Maka','Szymon dał się nabrać. Wróć do restauracji.','a3entry'],
  ['10','Znajomi czekają','Dokończcie wspólne spotkanie przy stoliku.','a3table'],
- ['11','Chwila z Marlenką','Sterujesz Kamisiem. Podejdź do Marlenki, żeby opowiedzieć jej o udanym żarcie.','a3marlena'],
+ ['11','Chwila z Kamisiem','Sterujesz Marlenką. Podejdź do Kamisia i porozmawiajcie o udanym żarcie.','a3kamis'],
  ['12','Pożegnanie','Podejdźcie do aut i zakończcie spotkanie.','a3farewell'],
  ['✓','Akt III ukończony!','Wasza rozmowa i rozjazd zostały zapisane. Kolejne spotkanie: korki u Kamisia.','a3farewell']
  ];
@@ -1114,14 +1114,14 @@ function act3Interact(id){
   else say('Szymon towarzyszył Ci w drodze po liquid.');
   return
  }
- if(id==='a3marlena'){
+ if(id==='a3kamis'){
   if(p===10)act3Dialogue([
    ['Kamiś','No i co? Żart wyszedł. Szymon naprawdę się nabrał!'],
    ['Marlenka','Hahaha, mówiłam, że trzeba dalej udawać!'],
    ['Kamiś','Wystarczyło pójść do auta po liquid, a tu od razu takie pytania.'],
    ['Narrator','Śmiejecie się jeszcze z całej sytuacji. W końcu pora wracać — każde pojedzie w swoją stronę.']
   ],()=>{act3Phase(11);act3Perspective()});
-  else say('Marlenka stoi obok i uśmiecha się na wspomnienie Waszego żartu.');
+  else say('Kamiś uśmiecha się na wspomnienie Waszego udanego żartu.');
   return
  }
  if(id==='a3farewell'){
@@ -1255,8 +1255,8 @@ function act3Scene(time){
    line(x,252,x,158,'#907985',8);ellipse(x,134,40,39,'#f2c0d2');ellipse(x+19,143,30,34,'#ecb2c9');
   }
   if(z==='goodbye'){
-   act3Person(8.5*TILE,5.45*TILE,'marlena',1.18);act3Title('Marlenka',8.5*TILE,5.45*TILE);
-   // Kamiś is the controllable player here; don't draw a second stationary copy.
+   act3Person(8.5*TILE,5.45*TILE,'kamis',1.18);act3Title('Kamiś',8.5*TILE,5.45*TILE);
+   // Marlenka remains the controllable character; only Kamiś stands here as an NPC.
    drawRounded(378,24,224,30,10,'#fff8f3dd');ctx.textAlign='center';ctx.fillStyle='#885f7a';ctx.font='bold 16px system-ui';ctx.fillText('Czas na pożegnanie…',491,45);
   } else {
    if(p===1){act3Person(260,395,'kamis');act3Title('Kamiś',260,395)}
