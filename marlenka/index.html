@@ -1049,7 +1049,7 @@ function act3Finish(){
  if(!a.reward){a.reward=true;state.hearts+=40;sound('win')}
  save();
  modal('Akt III ukończony 💞','WSPOMNIENIE ZAPISANE');
- para('Wyjazd do McDonalda dobiegł końca. Szymon dał się nabrać na Wasz żart, a Ty i Marlenka porozmawialiście o tym, zanim się rozjechaliście.');
+ para('Wyjazd do McDonalda dobiegł końca. Szymon dał się nabrać na Wasz żart, a Ty jako Marlenka porozmawiałaś z Kamisiem przed rozjazdem.');
  addAction('📖 Dwie perspektywy',act3Perspective);
  addAction('📐 Następna scena: Korki u Kamisia',()=>{closeModal();startAct4()},true);
  addAction('Wróć na mapę',closeModal);
@@ -1256,7 +1256,7 @@ function act3Scene(time){
   }
   if(z==='goodbye'){
    act3Person(8.5*TILE,5.45*TILE,'kamis',1.18);act3Title('Kamiś',8.5*TILE,5.45*TILE);
-   // Marlenka remains the controllable character; only Kamiś stands here as an NPC.
+   // Marlenka is drawn once by characterDraw() as the player; Kamiś is the only stationary NPC.
    drawRounded(378,24,224,30,10,'#fff8f3dd');ctx.textAlign='center';ctx.fillStyle='#885f7a';ctx.font='bold 16px system-ui';ctx.fillText('Czas na pożegnanie…',491,45);
   } else {
    if(p===1){act3Person(260,395,'kamis');act3Title('Kamiś',260,395)}
