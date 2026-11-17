@@ -1,0 +1,20 @@
+{
+  "id": "/Leaf-/marlenka/",
+  "name": "Marlenka 💞 — nasza historia",
+  "short_name": "Marlenka",
+  "description": "Prywatna pastelowa gra o wspomnieniach Marlenki i Kamisia",
+  "start_url": "/Leaf-/marlenka/",
+  "scope": "/Leaf-/marlenka/",
+  "display": "standalone",
+  "background_color": "#fff9fa",
+  "theme_color": "#f8dce9",
+  "lang": "pl",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
