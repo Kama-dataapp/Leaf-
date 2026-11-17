@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <meta name="description" content="Marlenka 💞 — gra o wspomnieniach. Rozdział I, powrót z zawodów, korki, osiemnastka i nowy otwarty świat w Akcie III: McDonald.">
-  <title>Marlenka 💞 — Akt III i IV · wersja 1.3</title>
+  <title>Marlenka 💞 — weekendowe korepetycje · wersja 1.4</title>
   <link rel="stylesheet" href="./act3-world.css">
   
   <style>
@@ -220,7 +220,7 @@ const blocked=new Set();function blockedRect(x1,y1,x2,y2){for(let y=y1;y<=y2;y++
 blockedRect(0,0,14,0);blockedRect(0,9,14,9);blockedRect(0,1,0,8);blockedRect(14,1,14,8);
 blockedRect(1,2,3,4);blockedRect(5,1,6,2);blockedRect(8,1,9,2);blockedRect(10,2,12,3);
 blockedRect(1,6,2,7);blockedRect(12,5,13,7);blockedRect(10,7,11,8);
-const fresh=()=>({scene:'room',x:7,y:7,roomPos:{x:7,y:7},townPos:{x:2,y:5},alleyPos:{x:2,y:5},face:'down',letter:false,stars:{bear:false,books:false,plant:false},key:false,opened:false,hearts:0,hair:0,outfit:0,sound:true,explored:[],started:false,town:{visited:false,metFlorist:false,petals:{cherry:false,fountain:false,bench:false},bouquet:false,gate:false},alley:{visited:false,clues:{lantern:false,photo:false,music:false},finished:false},drive:{visited:false,stage:0,choice:'',photo:false,sent:false,view:'kamis',finished:false,arrived:false},study:{visited:false,stage:0,view:'kamis',mathSolved:false,jokeChoice:'',electricFound:false,finished:false},birthday:{visited:false,stage:0,beat:0,pretend:'',view:'kamis',parsley:false,elbow:false,finished:false,rideFinished:false},act3:{zone:'car',phase:0,pos:{x:8,y:6},met:[],finished:false,reward:false,liquid:false,visited:false,meal:'',closingPlayed:false},act4:{visited:false,stage:0,view:'kamis',solved:false,finished:false,reward:false}});
+const fresh=()=>({scene:'room',x:7,y:7,roomPos:{x:7,y:7},townPos:{x:2,y:5},alleyPos:{x:2,y:5},face:'down',letter:false,stars:{bear:false,books:false,plant:false},key:false,opened:false,hearts:0,hair:0,outfit:0,sound:true,explored:[],started:false,town:{visited:false,metFlorist:false,petals:{cherry:false,fountain:false,bench:false},bouquet:false,gate:false},alley:{visited:false,clues:{lantern:false,photo:false,music:false},finished:false},drive:{visited:false,stage:0,choice:'',photo:false,sent:false,view:'kamis',finished:false,arrived:false},study:{visited:false,stage:0,view:'kamis',mathSolved:false,jokeChoice:'',electricFound:false,finished:false},birthday:{visited:false,stage:0,beat:0,pretend:'',view:'kamis',parsley:false,elbow:false,finished:false,rideFinished:false},act3:{zone:'car',phase:0,pos:{x:8,y:6},met:[],finished:false,reward:false,liquid:false,visited:false,meal:'',closingPlayed:false},act4:{visited:false,stage:0,view:'kamis',solved:false,secondSolved:false,thirdSolved:false,humor:'',weekendArcDone:false,finished:false,reward:false}});
 let state=load();let player={x:state.x,y:state.y,fromX:state.x,fromY:state.y,toX:state.x,toY:state.y,movedAt:0,face:state.face};
 let endingMode=1,started=false,dialog=null,currentModal='',pressed=new Set(),path=[],lastStep=0,viewW=960,viewH=640,cameraX=0,cameraY=0,elapsed=0,toastTimer=0,saveTimer=0,audioCtx=null;
 function load(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return fresh();const s=JSON.parse(raw);const d=fresh();return {...d,...s,stars:{...d.stars,...s.stars},town:{...d.town,...s.town,petals:{...d.town.petals,...(s.town?.petals||{})}},roomPos:s.roomPos||{x:s.x??7,y:s.y??7},townPos:s.townPos||d.townPos,alleyPos:s.alleyPos||d.alleyPos,alley:{...d.alley,...(s.alley||{}),clues:{...d.alley.clues,...(s.alley?.clues||{})}},drive:{...d.drive,...(s.drive||{})},study:{...d.study,...(s.study||{})},birthday:{...d.birthday,...(s.birthday||{})},act3:{...d.act3,...(s.act3||{}),pos:{...d.act3.pos,...(s.act3?.pos||{})}},act4:{...d.act4,...(s.act4||{})},explored:Array.isArray(s.explored)?s.explored:[],hair:Math.max(0,Math.min(HAIR.length-1,Number(s.hair)||0)),outfit:Math.max(0,Math.min(OUTFIT.length-1,Number(s.outfit)||0))}}catch(e){return fresh()}}
@@ -229,7 +229,7 @@ function scheduleSave(){clearTimeout(saveTimer);$('saveStatus').textContent='♡
 function nStars(){return Object.values(state.stars).filter(Boolean).length}
 function nPetals(){return Object.values(state.town.petals).filter(Boolean).length}
 function nClues(){return Object.values(state.alley.clues).filter(Boolean).length}
-function progressCount(){return state.scene==='act4'?Math.min(6,state.act4.stage+1):state.scene==='act3'?Math.min(13,state.act3.phase+1):state.scene==='birthday'?Math.min(23,state.birthday.stage+1):state.scene==='study'?Math.min(11,state.study.stage+1):state.scene==='drive'?Math.min(13,state.drive.stage+1):state.scene==='alley'?Number(state.alley.visited)+nClues()+Number(state.alley.finished):state.scene==='town'?Number(state.town.metFlorist)+nPetals()+Number(state.town.bouquet)+Number(state.town.gate):Number(state.letter)+nStars()+Number(state.key)+Number(state.opened)}
+function progressCount(){return state.scene==='act4'?Math.min(13,state.act4.stage+1):state.scene==='act3'?Math.min(13,state.act3.phase+1):state.scene==='birthday'?Math.min(23,state.birthday.stage+1):state.scene==='study'?Math.min(11,state.study.stage+1):state.scene==='drive'?Math.min(13,state.drive.stage+1):state.scene==='alley'?Number(state.alley.visited)+nClues()+Number(state.alley.finished):state.scene==='town'?Number(state.town.metFlorist)+nPetals()+Number(state.town.bouquet)+Number(state.town.gate):Number(state.letter)+nStars()+Number(state.key)+Number(state.opened)}
 function switchScene(to){
  if(to==='town'&&!state.opened){notify('Najpierw otwórz szkatułkę! 💗');return}
  if(to==='drive'){startDrive();return}
@@ -258,7 +258,7 @@ function setEnding(part){
  $('endingDescription').textContent=content.desc;$('endExploreBtn').innerHTML=content.btn;
  $('endingScreen').hidden=false;sound('win');
 }
-function currentQuest(){if(state.scene==='act4')return {num:state.act4.finished?'✓':'05',title:state.act4.finished?'Korki u Kamisia zapisane 💞':'Matematyka w domu Kamisia',desc:state.act4.finished?'Nowe wspomnienie w Księdze Wspomnień.':'Umówiona lekcja matematyki u Kamisia i dwie perspektywy.',hint:'Wybieraj odpowiedzi i przełączaj perspektywy.',target:[]};if(state.scene==='act3')return act3Quest();if(state.scene==='birthday'){const u=state.birthday;return {num:u.finished?'✓':'03',title:u.rideFinished?'Osiemnastka i powrót zapisane 💞':'Osiemnastka Szymona',desc:u.rideFinished?'Trzecie wspomnienie i wspólny powrót samochodem trafiły do Księgi Wspomnień.':'Udawana para, taniec, altanka, a potem cichy powrót i trzymanie się za ręce.',hint:'Czytaj dialogi, wybieraj odpowiedzi i zagraj krótką minigrę taneczną. Każdy tekst można cofnąć o jeden krok.',target:[]}}if(state.scene==='study'){const u=state.study;return {num:u.finished?'✓':'02',title:u.finished?'Drugie wspomnienie zapisane 💞':'Korki z matematyki',desc:u.finished?'Drugie wspomnienie trafiło do Księgi Wspomnień.':'Rozwiąż krótką zagadkę, odkryj żart z elektrykiem i zobacz ważny moment bliskości.',hint:'Wybieraj odpowiedzi w panelu wspomnienia. Przy zadaniu matematycznym kliknij poprawny wynik.',target:[]}}if(state.scene==='drive'){const d=state.drive;return {num:d.finished?'✓':'01',title:d.arrived?'Powrót i pożegnanie 💗':'Nocny powrót z zawodów',desc:d.arrived?'Marlenka dotarła bezpiecznie do domu. Następna scena czeka.':'Przeżyj jeszcze raz nocną podróż Oplem Insignią, rozmowę i żart na Natalce.',hint:'Wybieraj odpowiedzi w panelu pod ilustracją. To interaktywna historia, nie symulator kierowania autem.',target:[]}}if(state.scene==='alley'){
+function currentQuest(){if(state.scene==='act4')return {num:state.act4.finished?'✓':'05',title:state.act4.finished?'Korki u Kamisia zapisane 💞':'Matematyka w domu Kamisia',desc:state.act4.finished?'Matematyka, żarty i weekendowe powroty zapisane.':'Dużo matematyki, jeszcze więcej żartów i kolejne spotkania mimo wymagających studiów.',hint:'Wybieraj odpowiedzi i przełączaj perspektywy.',target:[]};if(state.scene==='act3')return act3Quest();if(state.scene==='birthday'){const u=state.birthday;return {num:u.finished?'✓':'03',title:u.rideFinished?'Osiemnastka i powrót zapisane 💞':'Osiemnastka Szymona',desc:u.rideFinished?'Trzecie wspomnienie i wspólny powrót samochodem trafiły do Księgi Wspomnień.':'Udawana para, taniec, altanka, a potem cichy powrót i trzymanie się za ręce.',hint:'Czytaj dialogi, wybieraj odpowiedzi i zagraj krótką minigrę taneczną. Każdy tekst można cofnąć o jeden krok.',target:[]}}if(state.scene==='study'){const u=state.study;return {num:u.finished?'✓':'02',title:u.finished?'Drugie wspomnienie zapisane 💞':'Korki z matematyki',desc:u.finished?'Drugie wspomnienie trafiło do Księgi Wspomnień.':'Rozwiąż krótką zagadkę, odkryj żart z elektrykiem i zobacz ważny moment bliskości.',hint:'Wybieraj odpowiedzi w panelu wspomnienia. Przy zadaniu matematycznym kliknij poprawny wynik.',target:[]}}if(state.scene==='drive'){const d=state.drive;return {num:d.finished?'✓':'01',title:d.arrived?'Powrót i pożegnanie 💗':'Nocny powrót z zawodów',desc:d.arrived?'Marlenka dotarła bezpiecznie do domu. Następna scena czeka.':'Przeżyj jeszcze raz nocną podróż Oplem Insignią, rozmowę i żart na Natalce.',hint:'Wybieraj odpowiedzi w panelu pod ilustracją. To interaktywna historia, nie symulator kierowania autem.',target:[]}}if(state.scene==='alley'){
  if(nClues()<3)return {num:'01',title:'Trzy ślady wspomnień',desc:`Odkryj trzy symbole w Alei Wspomnień (${nClues()} / 3): latarenkę, ramkę i pozytywkę.`,hint:'Latarenka w lewej górnej części alejki, ramka na prawo od altanki, pozytywka przy ławce na dole.',target:['alleyLantern','alleyPhoto','alleyMusic'].filter(id=>!state.alley.clues[id.slice(5).toLowerCase()])};
  if(!state.alley.finished)return {num:'02',title:'Spotkaj tajemniczego chłopaka',desc:'Wszystkie światełka zapłonęły. Podejdź do chłopaka stojącego przy różanej altance.',hint:'Kamiś czeka przy altance na prawo od środka mapy. Kliknij go lub podejdź i naciśnij E.',target:['kamis']};
  return {num:'✓',title:'Rozdział I ukończony! 💞',desc:'Znasz już sekret: to Kamiś. W kolejnych rozdziałach czekają Wasze prawdziwe wspomnienia.',hint:'Możesz porozmawiać z Kamisiem ponownie, żeby jeszcze raz zobaczyć zakończenie.',target:[]};}
@@ -269,9 +269,9 @@ function currentQuest(){if(state.scene==='act4')return {num:state.act4.finished?
  if(!state.town.gate)return {num:'04',title:'Tajemnicza brama',desc:'Zanieś magiczny bukiet do bramy w prawym górnym rogu.',hint:'Brama Tajemniczego Ogrodu znajduje się w prawym górnym rogu mapy.',target:['townGate']};
  return {num:'✓',title:'Część II ukończona!',desc:'Brama prowadzi do Alei Wspomnień. Odkryj ostatnią część pierwszego rozdziału!',hint:'Kliknij otwartą bramę w prawym górnym rogu miasteczka, aby wejść do Alei Wspomnień.',target:['townGate']};}
  if(!state.letter)return {num:'01',title:'Tajemnicza koperta',desc:'Podejdź do biurka i przeczytaj list z różową pieczęcią.',hint:'Biurko stoi po prawej stronie pokoju. Kliknij je lub podejdź i wciśnij E.',target:['desk']};if(nStars()<3)return {num:'02',title:'Trzy zagubione gwiazdki',desc:`Odszukaj gwiazdki ukryte w pokoju (${nStars()} / 3). Zajrzyj do misia, biblioteczki i roślinki.`,hint:'Szukaj błyszczących znaczków nad misiem, biblioteczką i rośliną. Każdą rzecz sprawdź raz.',target:['bear','books','plant'].filter(id=>!state.stars[id])};if(!state.key)return {num:'03',title:'Rybka zna sekret',desc:'Masz już wszystkie gwiazdki! Znajdź kotkę Rybkę i poproś o kluczyk.',hint:'Rybka to mała kotka na środku pokoju. Podejdź do niej i porozmawiaj.',target:['cat']};if(!state.opened)return {num:'04',title:'Otwórz szkatułkę',desc:'Złoty kluczyk jest w torebce. Odszukaj szkatułkę w dolnej części pokoju.',hint:'Szkatułka stoi na podłodze w prawej dolnej części pokoju.',target:['chest']};return {num:'✓',title:'Część I ukończona!',desc:'Otworzyłaś szkatułkę! Przez drzwi trafisz do Miasteczka Serc.',hint:'Przejdź przez drzwi pośrodku górnej ściany, aby odwiedzić Miasteczko Serc.',target:['roomDoor']}}
-function updateUI(){const q=currentQuest(),p=progressCount();$('chapterNumber').textContent=state.scene==='act4'?'ROZDZIAŁ IV':state.scene==='act3'?'ROZDZIAŁ III':(['drive','study','birthday'].includes(state.scene))?'ROZDZIAŁ II':'ROZDZIAŁ I';$('chapterName').textContent=state.scene==='act4'?'Korki z matematyki u Kamisia':state.scene==='act3'?'Wyprawa do McDonalda · Wielki żart':state.scene==='birthday'?'Wspomnienie III · Osiemnastka Szymona':state.scene==='study'?'Wspomnienie II · Korki z matematyki':state.scene==='drive'?'Wspomnienie I · Powrót z zawodów':state.scene==='alley'?'Część III · Aleja Wspomnień':state.scene==='town'?'Część II · Miasteczko Serc':'Część I · Różowy Pokój';$('questStep').textContent=q.num==='✓'?'UKOŃCZONE':`ZADANIE ${q.num}`;$('questTitle').textContent=q.title;$('questDesc').textContent=q.desc;$('progressLabel').textContent=`${Math.round(p/(state.scene==='act4'?6:state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100)}%`;$('progressFill').style.width=`${p/(state.scene==='act4'?6:state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100}%`;$('heartValue').textContent=state.hearts;$('secretValue').textContent=`${p} / ${state.scene==='act4'?6:state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6}`;
+function updateUI(){const q=currentQuest(),p=progressCount();$('chapterNumber').textContent=state.scene==='act4'?'ROZDZIAŁ IV':state.scene==='act3'?'ROZDZIAŁ III':(['drive','study','birthday'].includes(state.scene))?'ROZDZIAŁ II':'ROZDZIAŁ I';$('chapterName').textContent=state.scene==='act4'?'Korki z matematyki u Kamisia':state.scene==='act3'?'Wyprawa do McDonalda · Wielki żart':state.scene==='birthday'?'Wspomnienie III · Osiemnastka Szymona':state.scene==='study'?'Wspomnienie II · Korki z matematyki':state.scene==='drive'?'Wspomnienie I · Powrót z zawodów':state.scene==='alley'?'Część III · Aleja Wspomnień':state.scene==='town'?'Część II · Miasteczko Serc':'Część I · Różowy Pokój';$('questStep').textContent=q.num==='✓'?'UKOŃCZONE':`ZADANIE ${q.num}`;$('questTitle').textContent=q.title;$('questDesc').textContent=q.desc;$('progressLabel').textContent=`${Math.round(p/(state.scene==='act4'?13:state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100)}%`;$('progressFill').style.width=`${p/(state.scene==='act4'?13:state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100}%`;$('heartValue').textContent=state.hearts;$('secretValue').textContent=`${p} / ${state.scene==='act4'?13:state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6}`;
  const items=inventoryItems();$('inventoryMini').replaceChildren();if(!items.length){const em=document.createElement('span');em.className='empty-mini';em.textContent='Jeszcze nic tu nie ma… ✨';$('inventoryMini').appendChild(em)}else for(const item of items){const b=document.createElement('button');b.textContent=item.icon;b.title=item.name;b.setAttribute('aria-label',item.name);b.addEventListener('click',()=>openItem(item.id));$('inventoryMini').appendChild(b)} }
-function inventoryItems(){const x=[];if(state.letter)x.push({id:'letter',icon:'💌',name:'Różowy list',desc:'List rozpoczynający tajemniczą przygodę.'});if(nStars())x.push({id:'stars',icon:'⭐',name:`Gwiazdki (${nStars()}/3)`,desc:'Małe świecące skarby z pokoju Marlenki.'});if(state.key)x.push({id:'key',icon:'🗝️',name:'Złoty kluczyk',desc:'Otwiera tajemniczą szkatułkę.'});if(state.opened)x.push({id:'memory',icon:'💗',name:'Serce wspomnień',desc:'Najcenniejszy skarb z różowej szkatułki.'});if(nPetals())x.push({id:'petals',icon:'🌸',name:`Magiczne płatki (${nPetals()}/3)`,desc:'Trzy zaczarowane płatki z Miasteczka Serc.'});if(state.town.bouquet)x.push({id:'bouquet',icon:'💐',name:'Bukiet wspomnień',desc:'Bukiet ułożony przez Panią Fiołek.'});if(state.town.gate)x.push({id:'secondLetter',icon:'💌',name:'Drugi tajemniczy list',desc:'Wiadomość odkryta za bramą.'});if(nClues())x.push({id:'clues',icon:'✨',name:`Ślady wspomnień (${nClues()}/3)`,desc:'Trzy symbole, które prowadzą do Kamisia.'});if(state.alley.finished)x.push({id:'story',icon:'📖',name:'Pierwsza strona historii',desc:'Zapowiedź Waszych prawdziwych wspomnień.'});if(state.drive.finished)x.push({id:'ride',icon:'🚘',name:'Nocny powrót z zawodów',desc:'Pierwsze wspomnienie: rozmowa, żart na Natalce i bezpieczny powrót do domu.'});if(state.study.finished)x.push({id:'study',icon:'📐',name:'Korki z matematyki',desc:'Drugie wspomnienie: Netflix, zaginiony elektryk i pierwsza dłuższa bliskość.'});if(state.act3?.finished)x.push({id:'act3',icon:'🍟',name:'Akt III — McDonald',desc:'Udawana para, wspólne jedzenie, Szymon i pożegnanie.'});if(state.act4?.finished)x.push({id:'act4',icon:'📐',name:'Akt IV — Korki u Kamisia',desc:'Matematyka w domu Kamisia i dwie perspektywy.'});if(state.birthday.finished)x.push({id:'birthday',icon:'🎂',name:'Osiemnastka Szymona',desc:'Trzecie wspomnienie: impreza Szymona i powrót autem z kolegą, trzymanie się za ręce.'});return x}
+function inventoryItems(){const x=[];if(state.letter)x.push({id:'letter',icon:'💌',name:'Różowy list',desc:'List rozpoczynający tajemniczą przygodę.'});if(nStars())x.push({id:'stars',icon:'⭐',name:`Gwiazdki (${nStars()}/3)`,desc:'Małe świecące skarby z pokoju Marlenki.'});if(state.key)x.push({id:'key',icon:'🗝️',name:'Złoty kluczyk',desc:'Otwiera tajemniczą szkatułkę.'});if(state.opened)x.push({id:'memory',icon:'💗',name:'Serce wspomnień',desc:'Najcenniejszy skarb z różowej szkatułki.'});if(nPetals())x.push({id:'petals',icon:'🌸',name:`Magiczne płatki (${nPetals()}/3)`,desc:'Trzy zaczarowane płatki z Miasteczka Serc.'});if(state.town.bouquet)x.push({id:'bouquet',icon:'💐',name:'Bukiet wspomnień',desc:'Bukiet ułożony przez Panią Fiołek.'});if(state.town.gate)x.push({id:'secondLetter',icon:'💌',name:'Drugi tajemniczy list',desc:'Wiadomość odkryta za bramą.'});if(nClues())x.push({id:'clues',icon:'✨',name:`Ślady wspomnień (${nClues()}/3)`,desc:'Trzy symbole, które prowadzą do Kamisia.'});if(state.alley.finished)x.push({id:'story',icon:'📖',name:'Pierwsza strona historii',desc:'Zapowiedź Waszych prawdziwych wspomnień.'});if(state.drive.finished)x.push({id:'ride',icon:'🚘',name:'Nocny powrót z zawodów',desc:'Pierwsze wspomnienie: rozmowa, żart na Natalce i bezpieczny powrót do domu.'});if(state.study.finished)x.push({id:'study',icon:'📐',name:'Korki z matematyki',desc:'Drugie wspomnienie: Netflix, zaginiony elektryk i pierwsza dłuższa bliskość.'});if(state.act3?.finished)x.push({id:'act3',icon:'🍟',name:'Akt III — McDonald',desc:'Udawana para, wspólne jedzenie, Szymon i pożegnanie.'});if(state.act4?.finished)x.push({id:'act4',icon:'📐',name:'Akt IV — Korki u Kamisia',desc:'Matematyka, żarty i powroty Kamisia co weekend mimo studiów.'});if(state.birthday.finished)x.push({id:'birthday',icon:'🎂',name:'Osiemnastka Szymona',desc:'Trzecie wspomnienie: impreza Szymona i powrót autem z kolegą, trzymanie się za ręce.'});return x}
 function sound(kind='blip'){if(!state.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;audioCtx??=new A();if(audioCtx.state==='suspended')audioCtx.resume();const now=audioCtx.currentTime;const tones=kind==='win'?[523,659,784,1047]:kind==='collect'?[659,880]:kind==='move'?[330]:[440];tones.forEach((hz,i)=>{const osc=audioCtx.createOscillator(),vol=audioCtx.createGain();osc.type='sine';osc.frequency.setValueAtTime(hz,now+i*.09);vol.gain.setValueAtTime(.00001,now+i*.09);vol.gain.exponentialRampToValueAtTime(kind==='move'?.012:.045,now+i*.09+.012);vol.gain.exponentialRampToValueAtTime(.00001,now+i*.09+.16);osc.connect(vol);vol.connect(audioCtx.destination);osc.start(now+i*.09);osc.stop(now+i*.09+.17)})}catch(e){}}
 function notify(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,2600)}
 function award(amount,message){state.hearts+=amount;sound('collect');updateUI();if(message)notify(`+${amount} 💗  ${message}`);scheduleSave()}
@@ -1285,58 +1285,88 @@ function startAct4(){
  $('memoryOverlay').hidden=false;renderAct4UI();updateUI();save();
 }
 function act4Advance(stage){
- const a=state.act4;a.stage=Math.max(0,Math.min(5,stage));
- if(a.stage===5&&!a.finished){a.finished=true;if(!a.reward){a.reward=true;state.hearts+=35;sound('win')}}
- else sound('blip');
+ const a=state.act4;
+ a.stage=Math.max(0,Math.min(12,stage));
+ if(a.stage===12){
+  a.weekendArcDone=true;a.finished=true;
+  if(!a.reward){a.reward=true;state.hearts+=35;sound('win')}else sound('blip');
+ }else sound('blip');
  renderAct4UI();updateUI();save();
 }
 function act4View(view){state.act4.view=view;renderAct4UI();save()}
 function renderAct4UI(){
  if(state.scene!=='act4')return;
- const a=state.act4,st=Math.max(0,Math.min(5,a.stage));
+ const a=state.act4;
+ // Saved games from older Act IV ended at stage 5; migrate forward, preserving rewards and notes.
+ if(a.finished&&!a.weekendArcDone){a.finished=false;a.stage=6;save()}
+ const st=Math.max(0,Math.min(12,a.stage));
  $('memoryOverlay').hidden=false;$('memoryPrev').disabled=st===0;
- $('memoryChapterTag').textContent='ROZDZIAŁ IV · KORKI U KAMISIA';
+ $('memoryChapterTag').textContent='ROZDZIAŁ IV · MATEMATYKA I WEEKENDY';
  const steps=[
- {who:'Narrator',icon:'🏠',title:'Umówieni na korki u Kamisia',text:'Po wycieczce do McDonalda umawiacie się na kolejne spotkanie — tym razem na korki z matematyki w domu Kamisia. W tym rozdziale poznajemy początek wydarzenia; resztę historii będzie można rozbudować, gdy opowiecie kolejne szczegóły.'},
- {who:'Kamiś',icon:'📐',title:'Równanie na rozgrzewkę',text:'Na kartce w grze pojawia się zadanie: 3x + 6 = 18. Ile wynosi x? Rozwiąż je, zanim przejdziecie do dalszych rozmów.'},
- {who:'Narrator',icon:'📓',title:'Kolejna wspólna chwila',text:'Siedzicie nad matematyką w domu Kamisia. Nawet tak proste spotkanie może stać się kolejną stroną Waszej historii. Gra nie dopowiada, co wydarzyło się później — to zostawiamy Waszym wspomnieniom.'},
- {who:'Dwie perspektywy',icon:'💞',title:'Jak mogło wyglądać to spotkanie?',text:a.view==='kamis'?'Perspektywa Kamisia — fabularna interpretacja: zaprosił Marlenkę do domu, żeby pomóc jej z matematyką. Dobrze było znów się spotkać. Co naprawdę myślał, może dopisać autor historii.':'Perspektywa Marlenki — miejsce na jej własne wspomnienie: umówione korki w domu Kamisia. Jak zapamiętała ten dzień i co naprawdę czuła? Nie będziemy tego zgadywać — może dopisać sama.'},
- {who:'Myśli i wspomnienia',icon:'💭',title:'Co zapamiętaliście?',text:'Tutaj Marlenka może napisać własną wersję spotkania. Jej notatka zostaje zapisana lokalnie, a po prawidłowym zalogowaniu może być synchronizowana z panelem Kamisia. Można wrócić do tego rozdziału i dopisać historię.'},
- {who:'Księga Wspomnień',icon:'📖',title:'Początek nowego wspomnienia zapisany',text:'Kolejne spotkanie: korki z matematyki w domu Kamisia. To początek następnej części Waszej historii. Gdy dopowiecie, co działo się dalej, rozbudujemy ten rozdział o właściwe wydarzenia, zadania i zakończenie. 💗'}
+  {who:'Narrator',icon:'🏠',title:'Korki w domu Kamisia',text:'Umawiacie się na matematykę w domu Kamisia. Plan jest prosty: pouczyć się. Jak się okaże, będzie bardzo dużo matematyki… ale żartów jeszcze więcej.'},
+  {who:'Kamiś',icon:'📐',title:'Zadanie na rozgrzewkę',text:'Zaczynamy spokojnie: 3x + 6 = 18. Ile wynosi x? Marlenka musi wybrać poprawną odpowiedź, zanim zacznie się kolejna seria żartów.'},
+  {who:'Narrator',icon:'😄',title:'Matematyka przeplatana śmiechem',text:'Zadania, objaśnienia, kartki z obliczeniami i mnóstwo śmiechu. Jedno zadanie zajmuje chwilę, a rozmowy w międzyczasie rozciągają się na długo.'},
+  {who:'Kamiś',icon:'😏',title:'Profesor Kamiś i jego metody',text:a.humor==='genius'?'Kamiś ogłasza, że jego poziom geniuszu matematycznego jest trudny do zmierzenia. Marlenka może to skomentować tylko spojrzeniem.':'Kamiś próbuje zachować poważną minę nauczyciela, ale wciąż rzuca żartem. Jak tu się uczyć, kiedy nawet wzory są pretekstem do śmiechu?'},
+  {who:'Marlenka i Kamiś',icon:'➗',title:'Matematyka na serio',text:'Żarty żartami, ale tu rzeczywiście uczycie się sporo. Nowa łamigłówka: połowa liczby i jeszcze 7 dają 15. Jaka to liczba?'},
+  {who:'Narrator',icon:'📚',title:'Jeszcze jedno równanie',text:'Zeszyt zapełnia się obliczeniami. Sprawdź, czy Marlenka rozwiąże także 5(x − 2) = 20. Matematykę trzeba jednak potraktować porządnie — nawet z Kamisiem.'},
+  {who:'Dwie perspektywy',icon:'💭',title:'Tego dnia — dwa spojrzenia',text:a.view==='kamis'?'Perspektywa Kamisia (rekonstrukcja): chciał pomóc Marlenie z matematyką, ale zapamiętał również wszystkie żarty, swobodę i to, jak dobrze spędzało mu się z nią czas.':'Perspektywa Marlenki: spędziła z Kamisiem długi czas nad matematyką i żartami. Jak naprawdę zapamiętała to spotkanie, może dopisać własnymi słowami w „Moich myślach”.'},
+  {who:'Narrator',icon:'📅',title:'A może kolejne korki?',text:'Po pierwszych korepetycjach umawiacie się na następne. I na kolejne. Z pozoru chodzi tylko o matematykę, ale wspólny czas powtarza się coraz częściej.'},
+  {who:'Narrator',icon:'🎓',title:'Studia nie należą do łatwych',text:'Kamiś ma trudne, wymagające studia i wiele obowiązków. Mimo tego co weekend wraca do Marlenki, choćby po to, by przez kilka chwil pomóc jej z matematyką.'},
+  {who:'Marlenka i Kamiś',icon:'🗓️',title:'Kolejny weekend… i następny',text:'Wspólne korki stają się małą tradycją: powrót, matematyka, żarty, następne zadania i następne spotkanie. I tak tydzień po tygodniu.'},
+  {who:'Narrator',icon:'💗',title:'Więcej niż równania',text:'Na papierze: dużo matematyki. W pamięci: jeszcze więcej śmiechu. Kamiś wraca regularnie mimo studiów, żeby pomóc Marlenie — nawet jeśli wspólny czas jest krótki.'},
+  {who:'Dwie perspektywy',icon:'💞',title:'Co zostało w pamięci?',text:a.view==='kamis'?'Perspektywa Kamisia (rekonstrukcja): weekendowy powrót na korki był powodem, by jeszcze raz zobaczyć Marlenkę. Nawet ciężkie studia nie przeszkodziły mu wracać do tych krótkich spotkań.':'Perspektywa Marlenki: wspólna nauka i żarty powtarzały się przez kolejne weekendy. Jej prawdziwe myśli pozostawiamy do uzupełnienia — to jej część opowieści.'},
+  {who:'Księga Wspomnień',icon:'📖',title:'Korki, żarty i powroty 💞',text:'Zaczęło się od korków z matematyki w domu Kamisia. Potem umawialiście się na następne i kolejne. Mimo trudnych studiów Kamiś wracał co weekend do Marlenki, żeby choć przez chwilę pouczyć ją matematyki. A przy tym śmialiście się jeszcze więcej, niż rozwiązywaliście zadań. To wspomnienie zapisane. 💗'}
  ];
  const p=steps[st];$('memoryProgress').textContent=(st+1)+' / '+steps.length;
  $('memorySpeaker').replaceChildren();
  const avatar=document.createElement('span');avatar.className='portrait';avatar.textContent=p.icon;
- const who=document.createElement('span');who.textContent=p.who;$('memorySpeaker').append(avatar,who);
- $('memoryTitle').textContent=p.title;$('memoryText').textContent=p.text;
+ const who=document.createElement('span');who.textContent=p.who;
+ $('memorySpeaker').append(avatar,who);$('memoryTitle').textContent=p.title;$('memoryText').textContent=p.text;
  $('memoryActions').replaceChildren();$('memoryOptions').replaceChildren();$('memoryOptions').hidden=true;
- const next=(n,label)=>driveOption(label,()=>act4Advance(n),true);
- if(st===0)next(1,'📐 Przejdźcie do matematyki');
+ const go=(n,label='Dalej →')=>driveOption(label,()=>act4Advance(n),true);
+ if(st===0)go(1,'📐 Rozpocznij naukę');
  if(st===1){
-  driveOption('x = 3',()=>notify('Jeszcze raz: 3 · 3 + 6 = 15.'));
+  driveOption('x = 3',()=>notify('Sprawdź: 3 · 3 + 6 = 15.'));
   driveOption('x = 4 ✓',()=>{a.solved=true;act4Advance(2)},true);
-  driveOption('x = 5',()=>notify('Jeszcze raz: 3 · 5 + 6 = 21.'));
+  driveOption('x = 5',()=>notify('Sprawdź: 3 · 5 + 6 = 21.'));
  }
- if(st===2)next(3,'💞 Porównajcie perspektywy');
+ if(st===2)go(3,'😄 Kolejny żart');
  if(st===3){
-  $('memoryOptions').hidden=false;
-  for(const [v,label] of [['kamis','💛 Perspektywa Kamisia'],['marlena','🌷 Perspektywa Marlenki']]){
-   const b=document.createElement('button');b.textContent=label;b.className=a.view===v?'selected':'';
-   b.addEventListener('click',()=>act4View(v));$('memoryOptions').append(b);
-  }
-  driveOption('💭 Dodaj prawdziwe myśli Marlenki',()=>openThoughtEditor(),false);
-  next(4,'📓 Przejdź do notatek');
+  driveOption('😎 Ogłoś Kamisia geniuszem',()=>{a.humor='genius';act4Advance(4)},true);
+  driveOption('🤭 Spróbuj zachować powagę',()=>{a.humor='serious';act4Advance(4)});
  }
  if(st===4){
-  driveOption('💭 Dopisz, jak Marlenka zapamiętała ten dzień',()=>openThoughtEditor(),true);
-  next(5,'💗 Zapisz początek wspomnienia');
+  driveOption('8',()=>notify('Połowa 8 + 7 = 11.'));
+  driveOption('16 ✓',()=>{a.secondSolved=true;act4Advance(5)},true);
+  driveOption('22',()=>notify('Połowa 22 + 7 = 18.'));
  }
  if(st===5){
-  driveOption('💭 Edytuj myśli z tego wspomnienia',()=>openThoughtEditor());
-  driveOption('🍟 Wróć do McDonalda',startAct3,true);
-  driveOption('🎂 Wróć do osiemnastki Szymona',startBirthday);
+  driveOption('x = 4',()=>notify('5 · (4 − 2) = 10.'));
+  driveOption('x = 6 ✓',()=>{a.thirdSolved=true;act4Advance(6)},true);
+  driveOption('x = 8',()=>notify('5 · (8 − 2) = 30.'));
  }
- $('memoryNote').textContent='Perspektywy są literacką rekonstrukcją. Prawdziwe myśli Marlenki zapisuje tylko ona. Możesz cofnąć się do poprzedniego dialogu.';
+ if(st===6||st===11){
+  $('memoryOptions').hidden=false;
+  for(const [view,label] of [['kamis','💛 Perspektywa Kamisia'],['marlena','🌷 Perspektywa Marlenki']]){
+   const b=document.createElement('button');b.textContent=label;b.className=a.view===view?'selected':'';
+   b.addEventListener('click',()=>act4View(view));$('memoryOptions').append(b);
+  }
+  driveOption('💭 Dopisz prawdziwe myśli Marlenki',()=>openThoughtEditor());
+  go(st+1,st===6?'📅 Umówcie następne korki':'📖 Zapisz weekendy w Księdze');
+ }
+ if(st===7)go(8,'🎓 Zobacz trudne studia Kamisia');
+ if(st===8)go(9,'🚗 Weekendowy powrót');
+ if(st===9){
+  driveOption('📐 Jeszcze jedna lekcja matematyki',()=>{a.weekendSessions=(a.weekendSessions||0)+1;act4Advance(10)},true);
+  driveOption('😄 Najpierw żart, potem zadania',()=>{a.weekendSessions=(a.weekendSessions||0)+1;act4Advance(10)});
+ }
+ if(st===10)go(11,'💗 Zobacz obie perspektywy');
+ if(st===12){
+  driveOption('💭 Dopisz wspomnienia z korepetycji',()=>openThoughtEditor());
+  driveOption('🔁 Powtórz opowieść o weekendach',()=>{a.stage=0;renderAct4UI();save()});
+  driveOption('🍟 Wróć do McDonalda',startAct3,true);
+ }
+ $('memoryNote').textContent=st>=7&&st<=11?'Mimo wymagających studiów Kamiś co weekend wracał do Marlenki na matematykę — a żartów było jeszcze więcej niż zadań.':st===12?'Wspomnienie zapisane. Można dopisywać myśli i wracać do kolejnych weekendów.':'Dużo matematyki, jeszcze więcej żartów. Możesz cofnąć dialog albo dopisać prawdziwe myśli Marlenki.';
  refreshThoughtSnippet();
 }
 function act4Scene(time){
