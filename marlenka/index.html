@@ -997,7 +997,8 @@ async function refreshIdentity(nextUser){
  user=nextUser;member=null;remoteRows=[];
  if(user){
   const {data,error}=await client.from('marlenka_members').select('role').eq('user_id',user.id).maybeSingle();
-  if(error)console.warn('Unable to read role',error);  if(data?.role)member=data;
+  if(error)console.warn('Unable to read role',error);
+  if(data?.role)member=data;
   if(isMarlena())await loadMine();
  }
  setStatus();if(!$('accountLayer').hidden)renderPanel();
