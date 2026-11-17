@@ -961,11 +961,11 @@ function openThoughtEditor(context=thoughtContext()){
  thoughtButton('💌 Wyślij Kamisiowi',async()=>{const entry=saveCurrent();if(entry)await shareThought(entry);else thoughtParagraph('Najpierw wpisz swoją myśl.','thought-guide')});
  textarea.focus();
 }
-function openThoughtLibrary(){if(window.MarlenkaCloud?.isKamis()){window.MarlenkaCloud.openPanel();return}thoughtScreen('Myśli Marlenki 💭');thoughtParagraph('Tu możesz dopisać i edytować swoje myśli przy dowolnym wspomnieniu. Nie zmieniasz fabuły Kamisia — dodajesz własną perspektywę.','thought-guide');
+function openThoughtLibrary(){if(window.MarlenkaCloud?.isKamis()){window.MarlenkaCloud.openPanel();return}thoughtScreen('Myśli Marlenki 💭');thoughtParagraph('Tutaj przeczytasz swoje zapisane myśli. Dopisywać je i edytować można tylko po zakończeniu konkretnej sceny.','thought-guide');
  const list=Object.values(personalThoughts).filter(t=>t&&t.text&&typeof t.title==='string').sort((a,b)=>String(b.edited).localeCompare(String(a.edited)));
  if(!list.length)thoughtParagraph('Jeszcze nie zapisałaś żadnej myśli. Zacznij od bieżącej sceny. 🌷');
- for(const item of list){const e=document.createElement('div');e.className='thought-item';const h=document.createElement('strong');h.textContent=item.title;const p=document.createElement('p');p.textContent=item.text;const edit=document.createElement('button');edit.textContent='✏️ Edytuj';edit.onclick=()=>openThoughtEditor({key:item.key,title:item.title});const share=document.createElement('button');share.textContent='💌 Wyślij Kamisiowi';share.onclick=()=>shareThought(item);e.append(h,p,edit,share);$('thoughtBody').appendChild(e)}
- thoughtButton('🌸 Dodaj myśl do tego momentu',()=>openThoughtEditor(),true);
+ for(const item of list){const e=document.createElement('div');e.className='thought-item';const h=document.createElement('strong');h.textContent=item.title;const p=document.createElement('p');p.textContent=item.text;const share=document.createElement('button');share.textContent='💌 Wyślij Kamisiowi';share.onclick=()=>shareThought(item);e.append(h,p,share);if(thoughtSceneComplete()&&item.key===thoughtSceneKey()){const edit=document.createElement('button');edit.textContent='✏️ Edytuj na końcu sceny';edit.onclick=()=>openThoughtEditor({key:item.key,title:item.title});e.append(edit)}$('thoughtBody').appendChild(e)}
+ if(thoughtSceneComplete())thoughtButton('💭 Dopisz myśli po zakończeniu sceny',()=>openThoughtEditor(),true);
  thoughtButton('🔐 Konto i synchronizacja',()=>{closeThoughts();window.MarlenkaCloud?.openPanel()});thoughtButton('📬 Odebrane myśli',openThoughtInbox);
  thoughtButton('Zamknij',closeThoughts)
 }
@@ -1370,7 +1370,6 @@ function renderAct4UI(){
    const b=document.createElement('button');b.textContent=label;b.className=a.view===view?'selected':'';
    b.addEventListener('click',()=>act4View(view));$('memoryOptions').append(b);
   }
-  driveOption('💭 Dopisz prawdziwe myśli Marlenki',()=>openThoughtEditor());
   go(st+1,st===6?'📅 Umówcie następne korki':'📖 Zapisz weekendy w Księdze');
  }
  if(st===7)go(8,'🎓 Zobacz trudne studia Kamisia');
@@ -1497,7 +1496,7 @@ function renderPanel(){const b=body();b.replaceChildren();
   const loading=para('Wczytuję wpisy…','account-note');
   listAll().then(({data,error})=>{if(!$('accountLayer').hidden&&isKamis()&&loading.isConnected){loading.remove();showEntries(data,error)}}).catch(e=>{if(loading.isConnected)loading.textContent='Błąd wczytywania: '+e.message});
  }else{
-  para('Możesz dopisywać i poprawiać myśli podczas gry. Po zapisaniu online Kamiś odczyta je ze swojego konta.');
+  para('Myśli dopisujesz na końcu sceny. Po zapisaniu online Kamiś odczyta je ze swojego konta.');
   btn('💭 Moje wspomnienia',()=>{closePanel();$('thoughtsBtn').click()},true);
   btn('☁️ Wyślij lokalne myśli',syncLocal);
   if(remoteRows.length)showEntries(remoteRows,null,true);
