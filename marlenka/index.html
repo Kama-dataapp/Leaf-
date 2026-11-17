@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <meta name="description" content="Marlenka 💞 — gra o wspomnieniach. Rozdział I, powrót z zawodów, korki, osiemnastka i nowy otwarty świat w Akcie III: McDonald.">
-  <title>Marlenka 💞 — Akt III po poprawkach 1.2</title>
+  <title>Marlenka 💞 — Akt III rozszerzony 1.3</title>
   <link rel="stylesheet" href="./act3-world.css">
   
   <style>
@@ -229,7 +229,7 @@ function scheduleSave(){clearTimeout(saveTimer);$('saveStatus').textContent='♡
 function nStars(){return Object.values(state.stars).filter(Boolean).length}
 function nPetals(){return Object.values(state.town.petals).filter(Boolean).length}
 function nClues(){return Object.values(state.alley.clues).filter(Boolean).length}
-function progressCount(){return state.scene==='act3'?Math.min(10,state.act3.phase+1):state.scene==='birthday'?Math.min(23,state.birthday.stage+1):state.scene==='study'?Math.min(11,state.study.stage+1):state.scene==='drive'?Math.min(13,state.drive.stage+1):state.scene==='alley'?Number(state.alley.visited)+nClues()+Number(state.alley.finished):state.scene==='town'?Number(state.town.metFlorist)+nPetals()+Number(state.town.bouquet)+Number(state.town.gate):Number(state.letter)+nStars()+Number(state.key)+Number(state.opened)}
+function progressCount(){return state.scene==='act3'?Math.min(13,state.act3.phase+1):state.scene==='birthday'?Math.min(23,state.birthday.stage+1):state.scene==='study'?Math.min(11,state.study.stage+1):state.scene==='drive'?Math.min(13,state.drive.stage+1):state.scene==='alley'?Number(state.alley.visited)+nClues()+Number(state.alley.finished):state.scene==='town'?Number(state.town.metFlorist)+nPetals()+Number(state.town.bouquet)+Number(state.town.gate):Number(state.letter)+nStars()+Number(state.key)+Number(state.opened)}
 function switchScene(to){
  if(to==='town'&&!state.opened){notify('Najpierw otwórz szkatułkę! 💗');return}
  if(to==='drive'){startDrive();return}
@@ -268,7 +268,7 @@ function currentQuest(){if(state.scene==='act3')return act3Quest();if(state.scen
  if(!state.town.gate)return {num:'04',title:'Tajemnicza brama',desc:'Zanieś magiczny bukiet do bramy w prawym górnym rogu.',hint:'Brama Tajemniczego Ogrodu znajduje się w prawym górnym rogu mapy.',target:['townGate']};
  return {num:'✓',title:'Część II ukończona!',desc:'Brama prowadzi do Alei Wspomnień. Odkryj ostatnią część pierwszego rozdziału!',hint:'Kliknij otwartą bramę w prawym górnym rogu miasteczka, aby wejść do Alei Wspomnień.',target:['townGate']};}
  if(!state.letter)return {num:'01',title:'Tajemnicza koperta',desc:'Podejdź do biurka i przeczytaj list z różową pieczęcią.',hint:'Biurko stoi po prawej stronie pokoju. Kliknij je lub podejdź i wciśnij E.',target:['desk']};if(nStars()<3)return {num:'02',title:'Trzy zagubione gwiazdki',desc:`Odszukaj gwiazdki ukryte w pokoju (${nStars()} / 3). Zajrzyj do misia, biblioteczki i roślinki.`,hint:'Szukaj błyszczących znaczków nad misiem, biblioteczką i rośliną. Każdą rzecz sprawdź raz.',target:['bear','books','plant'].filter(id=>!state.stars[id])};if(!state.key)return {num:'03',title:'Rybka zna sekret',desc:'Masz już wszystkie gwiazdki! Znajdź kotkę Rybkę i poproś o kluczyk.',hint:'Rybka to mała kotka na środku pokoju. Podejdź do niej i porozmawiaj.',target:['cat']};if(!state.opened)return {num:'04',title:'Otwórz szkatułkę',desc:'Złoty kluczyk jest w torebce. Odszukaj szkatułkę w dolnej części pokoju.',hint:'Szkatułka stoi na podłodze w prawej dolnej części pokoju.',target:['chest']};return {num:'✓',title:'Część I ukończona!',desc:'Otworzyłaś szkatułkę! Przez drzwi trafisz do Miasteczka Serc.',hint:'Przejdź przez drzwi pośrodku górnej ściany, aby odwiedzić Miasteczko Serc.',target:['roomDoor']}}
-function updateUI(){const q=currentQuest(),p=progressCount();$('chapterNumber').textContent=state.scene==='act3'?'ROZDZIAŁ III':(['drive','study','birthday'].includes(state.scene))?'ROZDZIAŁ II':'ROZDZIAŁ I';$('chapterName').textContent=state.scene==='act3'?'Wyprawa do McDonalda · Wielki żart':state.scene==='birthday'?'Wspomnienie III · Osiemnastka Szymona':state.scene==='study'?'Wspomnienie II · Korki z matematyki':state.scene==='drive'?'Wspomnienie I · Powrót z zawodów':state.scene==='alley'?'Część III · Aleja Wspomnień':state.scene==='town'?'Część II · Miasteczko Serc':'Część I · Różowy Pokój';$('questStep').textContent=q.num==='✓'?'UKOŃCZONE':`ZADANIE ${q.num}`;$('questTitle').textContent=q.title;$('questDesc').textContent=q.desc;$('progressLabel').textContent=`${Math.round(p/(state.scene==='act3'?10:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100)}%`;$('progressFill').style.width=`${p/(state.scene==='act3'?10:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100}%`;$('heartValue').textContent=state.hearts;$('secretValue').textContent=`${p} / ${state.scene==='act3'?10:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6}`;
+function updateUI(){const q=currentQuest(),p=progressCount();$('chapterNumber').textContent=state.scene==='act3'?'ROZDZIAŁ III':(['drive','study','birthday'].includes(state.scene))?'ROZDZIAŁ II':'ROZDZIAŁ I';$('chapterName').textContent=state.scene==='act3'?'Wyprawa do McDonalda · Wielki żart':state.scene==='birthday'?'Wspomnienie III · Osiemnastka Szymona':state.scene==='study'?'Wspomnienie II · Korki z matematyki':state.scene==='drive'?'Wspomnienie I · Powrót z zawodów':state.scene==='alley'?'Część III · Aleja Wspomnień':state.scene==='town'?'Część II · Miasteczko Serc':'Część I · Różowy Pokój';$('questStep').textContent=q.num==='✓'?'UKOŃCZONE':`ZADANIE ${q.num}`;$('questTitle').textContent=q.title;$('questDesc').textContent=q.desc;$('progressLabel').textContent=`${Math.round(p/(state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100)}%`;$('progressFill').style.width=`${p/(state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6)*100}%`;$('heartValue').textContent=state.hearts;$('secretValue').textContent=`${p} / ${state.scene==='act3'?13:state.scene==='birthday'?23:state.scene==='study'?11:state.scene==='drive'?13:state.scene==='alley'?5:6}`;
  const items=inventoryItems();$('inventoryMini').replaceChildren();if(!items.length){const em=document.createElement('span');em.className='empty-mini';em.textContent='Jeszcze nic tu nie ma… ✨';$('inventoryMini').appendChild(em)}else for(const item of items){const b=document.createElement('button');b.textContent=item.icon;b.title=item.name;b.setAttribute('aria-label',item.name);b.addEventListener('click',()=>openItem(item.id));$('inventoryMini').appendChild(b)} }
 function inventoryItems(){const x=[];if(state.letter)x.push({id:'letter',icon:'💌',name:'Różowy list',desc:'List rozpoczynający tajemniczą przygodę.'});if(nStars())x.push({id:'stars',icon:'⭐',name:`Gwiazdki (${nStars()}/3)`,desc:'Małe świecące skarby z pokoju Marlenki.'});if(state.key)x.push({id:'key',icon:'🗝️',name:'Złoty kluczyk',desc:'Otwiera tajemniczą szkatułkę.'});if(state.opened)x.push({id:'memory',icon:'💗',name:'Serce wspomnień',desc:'Najcenniejszy skarb z różowej szkatułki.'});if(nPetals())x.push({id:'petals',icon:'🌸',name:`Magiczne płatki (${nPetals()}/3)`,desc:'Trzy zaczarowane płatki z Miasteczka Serc.'});if(state.town.bouquet)x.push({id:'bouquet',icon:'💐',name:'Bukiet wspomnień',desc:'Bukiet ułożony przez Panią Fiołek.'});if(state.town.gate)x.push({id:'secondLetter',icon:'💌',name:'Drugi tajemniczy list',desc:'Wiadomość odkryta za bramą.'});if(nClues())x.push({id:'clues',icon:'✨',name:`Ślady wspomnień (${nClues()}/3)`,desc:'Trzy symbole, które prowadzą do Kamisia.'});if(state.alley.finished)x.push({id:'story',icon:'📖',name:'Pierwsza strona historii',desc:'Zapowiedź Waszych prawdziwych wspomnień.'});if(state.drive.finished)x.push({id:'ride',icon:'🚘',name:'Nocny powrót z zawodów',desc:'Pierwsze wspomnienie: rozmowa, żart na Natalce i bezpieczny powrót do domu.'});if(state.study.finished)x.push({id:'study',icon:'📐',name:'Korki z matematyki',desc:'Drugie wspomnienie: Netflix, zaginiony elektryk i pierwsza dłuższa bliskość.'});if(state.act3?.finished)x.push({id:'act3',icon:'💗',name:'Akt III — McDonald',desc:'Rozmowa w aucie, zamówienie jedzenia i żart na Szymonie podczas wyprawy po liquid.'});if(state.birthday.finished)x.push({id:'birthday',icon:'🎂',name:'Osiemnastka Szymona',desc:'Trzecie wspomnienie: impreza Szymona i powrót autem z kolegą, trzymanie się za ręce.'});return x}
 function sound(kind='blip'){if(!state.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;audioCtx??=new A();if(audioCtx.state==='suspended')audioCtx.resume();const now=audioCtx.currentTime;const tones=kind==='win'?[523,659,784,1047]:kind==='collect'?[659,880]:kind==='move'?[330]:[440];tones.forEach((hz,i)=>{const osc=audioCtx.createOscillator(),vol=audioCtx.createGain();osc.type='sine';osc.frequency.setValueAtTime(hz,now+i*.09);vol.gain.setValueAtTime(.00001,now+i*.09);vol.gain.exponentialRampToValueAtTime(kind==='move'?.012:.045,now+i*.09+.012);vol.gain.exponentialRampToValueAtTime(.00001,now+i*.09+.16);osc.connect(vol);vol.connect(audioCtx.destination);osc.start(now+i*.09);osc.stop(now+i*.09+.17)})}catch(e){}}
@@ -975,32 +975,32 @@ function act3Objects(){
  const z=state.act3.zone,p=state.act3.phase;
  const o=(id,name,x,y)=>({id,name,x,y,hx:x-.7,hy:y-1.1,hw:1.5,hh:2});
  if(z==='car')return [o('a3door','Drzwi samochodu',11,6)];
+ if(z==='goodbye')return [o('a3marlena','Marlenka — porozmawiaj',8,5),o('a3farewell','Pożegnanie przy autach',4,7)];
  if(z==='street')return [o('a3entry','Wejście do McDonalda',11,4),o('a3car','Samochód',3,7)].concat(p===7?[o('a3road','Szymon',8,6)]:[]);
  return [
-  o('a3order','Kasa — zamów jedzenie',11,3),
-  o('a3table','Wspólny stolik',7,6),
-  o('a3exit','Wyjście z McDonalda',7,8),
-  o('a3szymon','Szymon',4,5),o('a3piasek','Piasek',10,6),
-  o('a3natalka','Natalka',3,7),o('a3karolina','Karolina',12,6)
+  o('a3order','Kasa — zamów jedzenie',11,3),o('a3table','Wspólny stolik',7,6),o('a3exit','Wyjście z McDonalda',7,8),
+  o('a3szymon','Szymon',4,5),o('a3piasek','Piasek',10,6),o('a3natalka','Natalka',3,7),o('a3karolina','Karolina',12,6)
  ];
 }
-function act3CanWalk(x,y){if(state.act3.zone==='street')return !(x>=9&&x<=13&&y<=3)&&!(x>=2&&x<=4&&y===8);if(state.act3.zone==='inside')return !(x>=9&&x<=13&&y<=2)&&!(x>=6&&x<=8&&y>=5&&y<=6);return true}
+function act3CanWalk(x,y){if(state.act3.zone==='street')return !(x>=9&&x<=13&&y<=3)&&!(x>=2&&x<=4&&y===8);if(state.act3.zone==='inside')return !(x>=9&&x<=13&&y<=2)&&!(x>=6&&x<=8&&y>=5&&y<=6);if(state.act3.zone==='goodbye')return !(x>=2&&x<=5&&y>=7);return true}
 function act3Quest(){
  const content=[
  ['01','Pomysł Marlenki','Rozmowa w samochodzie przed spotkaniem.','a3door'],
  ['02','Idźcie do McDonalda','Wysiadacie i ruszacie do restauracji.','a3entry'],
- ['03','Zamówcie jedzenie','Przy kasie wybierzcie i zamówcie coś do jedzenia.','a3order'],
- ['04','Usiądźcie z ekipą','Szymon, Piasek, Natalka i Karolina są na miejscu.','a3table'],
- ['05','Porozmawiaj z Szymonem','Kamiś wybiera się do samochodu po liquid.','a3szymon'],
- ['06','W drogę!','Teraz sterujesz Kamisiem. Wyjdź z restauracji.','a3exit'],
- ['07','Liquid z samochodu','Podejdź do samochodu, z którego trzeba go zabrać.','a3car'],
+ ['03','Zamówcie jedzenie','Podejdźcie do kasy i zdecydujcie, co zamówić.','a3order'],
+ ['04','Usiądźcie z ekipą','Szymon, Piasek, Natalka i Karolina czekają przy stoliku.','a3table'],
+ ['05','Porozmawiaj z Szymonem','Kamiś idzie po liquid do samochodu. Szymon chce dołączyć.','a3szymon'],
+ ['06','W drogę!','Sterujesz Kamisiem. Wyjdź z restauracji.','a3exit'],
+ ['07','Liquid z samochodu','Podejdź do auta po liquid.','a3car'],
  ['08','Pytanie Szymona','W drodze powrotnej Szymon chce o coś zapytać.','a3road'],
- ['09','Wracajcie do Maka','Wróć razem z Szymonem do reszty.','a3entry'],
- ['10','Znajomi czekają','Podejdź ponownie do wspólnego stolika.','a3table'],
- ['✓','Akt III ukończony!','To wspomnienie jest zapisane. Możesz nadal spacerować.','a3table']
+ ['09','Wracajcie do Maka','Szymon dał się nabrać. Wróć do restauracji.','a3entry'],
+ ['10','Znajomi czekają','Dokończcie wspólne spotkanie przy stoliku.','a3table'],
+ ['11','Chwila z Marlenką','Przed rozjazdem opowiedz Marlenie, że Szymon się nabrał.','a3marlena'],
+ ['12','Pożegnanie','Podejdźcie do aut i zakończcie spotkanie.','a3farewell'],
+ ['✓','Akt III ukończony!','Wasza rozmowa i rozjazd zostały zapisane. Kolejne spotkanie: korki u Kamisia.','a3farewell']
  ];
- const q=content[Math.min(10,state.act3.phase)];
- return {num:q[0],title:q[1],desc:q[2],hint:'Ruch jak w Akcie I: WASD, strzałki lub dotyk; E — interakcja.',target:act3Objects().some(o=>o.id===q[3])?[q[3]]:[]}
+ const q=content[Math.min(12,state.act3.phase)];
+ return {num:q[0],title:q[1],desc:q[2],hint:'WASD/strzałki lub dotyk; E — interakcja. Porozmawiaj także z pozostałymi znajomymi.',target:act3Objects().some(o=>o.id===q[3])?[q[3]]:[]}
 }
 function act3Phase(n){state.act3.phase=n;updateUI();save()}
 function act3Move(z,x,y){
@@ -1020,97 +1020,171 @@ function act3CarIntro(){
 function startAct3(){
  if(!state.birthday?.rideFinished){notify('Najpierw ukończ osiemnastkę Szymona.');return}
  started=true;state.started=true;state.scene='act3';state.act3.visited=true;
+ if(state.act3.finished&&!state.act3.closingPlayed){state.act3.finished=false;state.act3.phase=10;state.act3.zone='goodbye';state.act3.pos={x:6,y:6}}
  for(const id of ['endingScreen','kissScreen','startScreen','panelModal','dialogOverlay'])$(id).hidden=true;
  $('memoryOverlay').hidden=true;
  const v=state.act3.pos||{x:8,y:6};
  act3Move(state.act3.zone,v.x,v.y);
  if(state.act3.phase===0)act3CarIntro()
 }
+function act3Order(meal){
+ state.act3.meal=meal;
+ closeModal();
+ act3Dialogue([
+ ['Narrator','Przy kasie zamawiacie jedzenie. '+(meal==='burger'?'Wybór w grze pada na burgera i frytki.':meal==='wrap'?'Wybór w grze pada na wrapa.':'Wybieracie przekąskę i napoje.')],
+ ['Narrator','Zamówienie gotowe! Zabieracie je do stolika, gdzie siedzą Szymon, Piasek, Natalka i Karolina.']
+ ],()=>{act3Phase(3);notify('Podejdź do stolika i porozmawiaj ze znajomymi.')});
+}
+function act3Perspective(){
+ modal('Dwie perspektywy 💞','PO WYJŚCIU Z McDONALDA');
+ para('To literacka interpretacja wspomnienia. Prawdziwe myśli Marlenki może dopisać tylko ona.');
+ addAction('💛 Jak widział to Kamiś',()=>{modal('Myśli Kamisia 💛','INTERPRETACJA');para('To miał być zwykły Mak ze znajomymi, a znów udało nam się zrobić z tego coś naszego. Kiedy Szymon zapytał o Marlenkę i uwierzył w żart, nie mogłem przestać się uśmiechać.');addAction('← Wróć do gry',closeModal,true)});
+ addAction('🌷 Jak mogła widzieć to Marlenka',()=>{modal('Perspektywa Marlenki 🌷','DO UZUPEŁNIENIA PRZEZ MARLENKĘ');para('To ona zaproponowała dalsze udawanie związku. Wspólny wypad, żarty i rozmowa po wszystkim mogą zostać zapisane z jej prawdziwej perspektywy. Nie przypisujemy jej nieznanych uczuć.');addAction('💭 Dopisz własne myśli',()=>{closeModal();openThoughtEditor({key:'act3:10',title:'Akt III — po McDonaldzie: moje myśli'})},true);addAction('← Wróć do gry',closeModal)});
+ addAction('Wróć do gry',closeModal,true)
+}
+function act3Finish(){
+ const a=state.act3;
+ a.finished=true;a.closingPlayed=true;act3Phase(12);
+ if(!a.reward){a.reward=true;state.hearts+=40;sound('win')}
+ save();
+ modal('Akt III ukończony 💞','WSPOMNIENIE ZAPISANE');
+ para('Wyjazd do McDonalda dobiegł końca. Szymon dał się nabrać na Wasz żart, a Ty i Marlenka porozmawialiście o tym, zanim się rozjechaliście.');
+ addAction('📖 Dwie perspektywy',act3Perspective);
+ addAction('📐 Następna scena: Korki u Kamisia',()=>{closeModal();startAct4()},true);
+ addAction('Wróć na mapę',closeModal);
+}
 function act3Interact(id){
  const a=state.act3,p=a.phase;
  const say=(txt)=>act3Dialogue([['Narrator',txt]]);
  if(id==='a3door'){if(p===0)act3CarIntro();else act3Move('street',3,7);return}
  if(id==='a3entry'){
-  if(p===1){act3Phase(2);act3Move('inside',7,7);say('W McDonaldzie są już Szymon, Piasek, Natalka i Karolina. Wy pamiętacie swój plan: dalej udawać związek. Najpierw zamawiacie jedzenie.')}
-  else if(p===8){act3Phase(9);act3Move('inside',7,8);say('Kamiś i Szymon wracają do reszty znajomych.')}
+  if(p===1){act3Phase(2);act3Move('inside',7,7);say('W McDonaldzie są Szymon, Piasek, Natalka i Karolina. Najpierw zamówcie jedzenie.')}
+  else if(p===8){act3Phase(9);act3Move('inside',7,8);say('Kamiś i Szymon wracają do ekipy.')}
   else act3Move('inside',7,8);
   return
  }
  if(id==='a3order'){
-  if(p===2)act3Dialogue([
-   ['Narrator','Podchodzicie do kasy, wybieracie jedzenie i składacie zamówienie.'],
-   ['Narrator','Po odebraniu jedzenia idziecie razem do stolika.']
-  ],()=>{act3Phase(3);notify('Podejdź do wspólnego stolika.')});
-  else say('Tutaj już zamówiliście jedzenie.');
+  if(p===2){modal('Co zamawiamy? 🍔','MCDONALD');para('Wybierz jedzenie w grze — nie przypisuje to Waszej historii konkretnego zamówienia.');addAction('🍔 Burger i frytki',()=>act3Order('burger'),true);addAction('🌯 Wrap',()=>act3Order('wrap'));addAction('🥤 Przekąska i napoje',()=>act3Order('snack'))}
+  else say('Tutaj odbieraliście zamówienie. Możesz obejrzeć menu albo wrócić do stolika.');
   return
  }
  if(id==='a3table'){
   if(p===3)act3Dialogue([
-   ['Narrator','Siedzicie i jecie z Szymonem, Piaskiem, Natalką i Karoliną.'],
+   ['Narrator','Przy stoliku siedzicie z Szymonem, Piaskiem, Natalką i Karoliną. Zamówienie stoi przed Wami.'],
    ['Narrator','Ty i Marlenka nadal udajecie, że jesteście razem.'],
-   ['Kamiś','Idę po liquid do samochodu.']
-  ],()=>{act3Phase(4);notify('Szymon chce dołączyć. Porozmawiaj z nim.')});
+   ['Kamiś','Idę do auta po liquid.']
+  ],()=>{act3Phase(4);notify('Porozmawiaj z Szymonem.')});
   else if(p===9)act3Dialogue([
-   ['Narrator','Wracacie z Szymonem do wspólnego spotkania. Wasz żart się udał — Szymon uwierzył w udawany związek.'],
-   ['Księga Wspomnień','Rozmowa w aucie, McDonald, jedzenie z ekipą, liquid z samochodu i Szymon wkręcony w żart. 💗']
-  ],()=>{a.finished=true;act3Phase(10);if(!a.reward){a.reward=true;state.hearts+=40;sound('win')}save();notify('Nowe wspomnienie zapisane!')});
-  else say('Wspólny stolik. To tutaj wszyscy razem jedliście.');
+   ['Narrator','Wracacie ze spaceru po liquid do wspólnego stolika.'],
+   ['Narrator','Szymon naprawdę uwierzył w Wasz udawany związek. Po jedzeniu spotkanie powoli dobiega końca.'],
+   ['Narrator','Ty i Marlenka wychodzicie przed restaurację. Jeszcze jedno pożegnanie — i kolejne wspomnienie będzie zakończone.']
+  ],()=>{act3Phase(10);act3Move('goodbye',6,6);notify('Podejdź do Marlenki. Opowiedz jej, że Szymon się nabrał.')});
+  else say('Wspólny stolik. Możesz jeszcze raz spojrzeć na miejsce, w którym siedzieliście.');
   return
  }
  if(id==='a3szymon'){
   if(p===4)act3Dialogue([
-   ['Szymon','Idziesz po liquid do samochodu? Mogę pójść z tobą?'],
+   ['Szymon','Idziesz po liquid do auta? Mogę pójść z Tobą?'],
    ['Myśli Kamisia','Jako człowiek przystojny, odważny, śmiały i ponadprzeciętnie inteligentny — oczywiście się zgadzam.']
-  ],()=>{act3Phase(5);notify('Teraz sterujesz Kamisiem. Idź do wyjścia.')});
-  else say('Szymon jest dzisiaj na spotkaniu z całą ekipą.');
+  ],()=>{act3Phase(5);notify('Sterujesz teraz Kamisiem. Idź do wyjścia.')});
+  else say('Szymon jest z całą ekipą. Za chwilę może mieć kilka pytań.');
   return
  }
  if(id==='a3exit'){
-  if(p===5){act3Phase(6);act3Move('street',11,5);notify('Idź do samochodu po liquid — Szymon idzie razem z Tobą.')}
-  else if(p<5)notify('Najpierw dokończ jedzenie i rozmowę z Szymonem.');
+  if(p===5){act3Phase(6);act3Move('street',11,5);notify('Idź do samochodu po liquid. Szymon idzie razem z Tobą.')}
+  else if(p<5)notify('Najpierw zamówcie jedzenie i porozmawiajcie z Szymonem.');
   else act3Move('street',11,5);
   return
  }
  if(id==='a3car'){
   if(p===6)act3Dialogue([
-   ['Narrator','Kamiś podchodzi do zaparkowanego auta i zabiera z niego liquid.'],
-   ['Narrator','Szymon idzie razem z Kamisiem. Teraz ruszają z powrotem do McDonalda.']
-  ],()=>{a.liquid=true;act3Phase(7);notify('W drodze powrotnej porozmawiaj z Szymonem.')});
-  else say('To samochód, którym przyjechaliście do McDonalda.');
+   ['Narrator','Kamiś podchodzi do samochodu i wyjmuje z niego liquid.'],
+   ['Narrator','Szymon czeka obok. Wracacie pieszo do McDonalda.']
+  ],()=>{a.liquid=true;act3Phase(7);notify('Szymon chce o coś zapytać. Porozmawiaj z nim.')});
+  else say('Samochód, którym przyjechaliście na spotkanie. Karoseria odbija światła parkingu.');
   return
  }
  if(id==='a3road'){
   if(p===7)act3Dialogue([
    ['Szymon','A Ty coś kręcisz z Marlenką?'],
-   ['Narrator','Chwila rozmowy i Kamiś daje do zrozumienia, że coś między nimi jest — w ramach Waszego żartu.'],
-   ['Narrator','Szymon daje się nabrać. Wierzy, że jesteście parą.']
-  ],()=>{a.fooled=true;act3Phase(8);notify('Wracaj razem z Szymonem do McDonalda.')});
-  else say('Szymon idzie razem z Kamisiem.');
+   ['Narrator','Chwila rozmowy i odpowiedzi Kamisia wystarczają, żeby wkręcić Szymona w Wasz żart.'],
+   ['Narrator','Szymon daje się nabrać. Uwierzył, że naprawdę jesteście razem.']
+  ],()=>{a.fooled=true;act3Phase(8);notify('No i pięknie. Wracaj do McDonalda!')});
+  else say('Szymon towarzyszył Ci w drodze po liquid.');
   return
  }
- const names={a3piasek:'Piasek',a3natalka:'Natalka',a3karolina:'Karolina'};
- if(names[id])say(names[id]+' jest z Wami w McDonaldzie.');
+ if(id==='a3marlena'){
+  if(p===10)act3Dialogue([
+   ['Kamiś','No i co? Żart wyszedł. Szymon naprawdę się nabrał!'],
+   ['Marlenka','Hahaha, mówiłam, że trzeba dalej udawać!'],
+   ['Kamiś','Wystarczyło pójść do auta po liquid, a tu od razu takie pytania.'],
+   ['Narrator','Śmiejecie się jeszcze z całej sytuacji. W końcu pora wracać — każde pojedzie w swoją stronę.']
+  ],()=>{act3Phase(11);act3Perspective()});
+  else say('Marlenka stoi obok i uśmiecha się na wspomnienie Waszego żartu.');
+  return
+ }
+ if(id==='a3farewell'){
+  if(p===11)act3Dialogue([
+   ['Narrator','Żegnacie się przy samochodach. To koniec wspólnego wieczoru w McDonaldzie.'],
+   ['Kamiś','Dobrze, że wpadłaś na ten pomysł. Nabraliśmy Szymona.'],
+   ['Narrator','Rozjeżdżacie się w swoje strony. Zostaje śmiech, mały sekret i kolejne wspomnienie do Księgi.']
+  ],act3Finish);
+  else if(p>=12){act3Finish()}
+  else notify('Najpierw porozmawiaj z Marlenką.');
+  return
+ }
+ const friends={
+  a3piasek:['Piasek','Cała ekipa zebrała się na jedzenie. Wszyscy rozmawiają i śmieją się przy stoliku.'],
+  a3natalka:['Natalka','Natalka jest przy stoliku. To kolejna z Waszych wspólnych znajomych.'],
+  a3karolina:['Karolina','Karolina dołącza do rozmów przy jedzeniu.']
+ };
+ if(friends[id]){act3Dialogue([friends[id],['Narrator','To dodatkowa rozmowa w grze — nie jest dosłownym zapisem tego, co powiedzieli znajomi.']]);return}
 }
 function act3Person(x,y,type,scale=1){
  const colors={
-  kamis:['#a48760','#5e7998','#f0c5af','#478bbd'],
-  szymon:['#6b504c','#8fa59f','#edc3aa','#665e62'],
-  piasek:['#b49a6a','#d49b74','#edc2a9','#5f5b6e'],
-  natalka:['#58484c','#ab92cf','#eec3b2','#574a66'],
-  karolina:['#99745c','#c4ae7b','#f1c4a7','#4c7771'],
-  marlena:['#755047','#d995b2','#f5c6aa','#5a4559']
+  kamis:['#9e7859','#627d9a','#f2c8af','#468bc9'],
+  szymon:['#654e46','#8da7a0','#ebc3ad','#66636f'],
+  piasek:['#b49b72','#daa482','#efc6ab','#615c6f'],
+  natalka:['#58464d','#a998cd','#f0c7b3','#63556f'],
+  karolina:['#a47b60','#b8be85','#f0c5ac','#54746a'],
+  marlena:['#755047','#dc93ba','#f5c7b2','#655267']
  };
  const c=colors[type]||colors.kamis;
  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
- ellipse(0,25,19,6,'#7b617555');
- drawRounded(-14,0,13,24,4,'#69627e');drawRounded(3,0,13,24,4,'#69627e');
- drawRounded(-21,-32,43,38,9,c[1]);
- ellipse(-23,-11,6,13,c[1]);ellipse(23,-11,6,13,c[1]);
- ellipse(0,-51,21,23,c[2]);ellipse(-9,-53,2.8,3.4,c[3]);ellipse(9,-53,2.8,3.4,c[3]);
- line(-5,-42,6,-42,'#b6727a',2);
- ellipse(0,-72,23,12,c[0]);drawRounded(-21,-70,42,9,4,c[0]);
- if(['marlena','natalka','karolina'].includes(type)){drawRounded(-22,-71,8,31,5,c[0]);drawRounded(16,-71,8,31,5,c[0])}
- ctx.restore()
+ ellipse(0,26,21,7,'#7b617544');
+ drawRounded(-17,0,14,25,4,type==='kamis'?'#344765':'#605972');
+ drawRounded(4,0,14,25,4,type==='kamis'?'#344765':'#605972');
+ ellipse(-10,25,9,4,'#4d5061');ellipse(12,25,9,4,'#4d5061');
+ drawRounded(-22,-34,45,40,10,type==='kamis'?'#3e587a':c[1]);
+ ellipse(-24,-15,6,15,c[1]);ellipse(25,-15,6,15,c[1]);
+ if(type==='kamis'){
+  drawRounded(-9,-32,18,29,3,'#f7f1e7'); // shirt
+  ctx.fillStyle='#9fb3c7';ctx.beginPath();ctx.moveTo(-20,-33);ctx.lineTo(-6,-20);ctx.lineTo(-1,-34);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(20,-33);ctx.lineTo(6,-20);ctx.lineTo(1,-34);ctx.closePath();ctx.fill();
+  ellipse(0,-11,2.1,2.1,'#c6a076');ellipse(0,-5,2.1,2.1,'#c6a076');
+  line(-22,-25,-19,-6,'#8ca9c9',2);line(22,-25,20,-6,'#8ca9c9',2);
+ }else{
+  drawRounded(-4,-30,8,13,3,'#f6e4ec');
+  if(type==='marlena')ellipse(0,-8,5,4,'#fff0f4')
+ }
+ ellipse(0,-53,22,24,c[2]);
+ ellipse(-9,-54,3.2,4.2,c[3]);ellipse(9,-54,3.2,4.2,c[3]);
+ ellipse(-8,-55,1,1,'#fff9f9');ellipse(10,-55,1,1,'#fff9f9');
+ ellipse(-14,-46,5,2.5,'#ebafaeb8');ellipse(14,-46,5,2.5,'#ebafaeb8');
+ ctx.beginPath();ctx.arc(0,-46,type==='kamis'?8:6,0,Math.PI);ctx.strokeStyle='#9d6371';ctx.lineWidth=2.2;ctx.stroke();
+ ellipse(0,-73,24,14,c[0]);drawRounded(-23,-71,46,11,5,c[0]);
+ if(type==='kamis'){
+  ctx.fillStyle='#c6a17c';ctx.beginPath();ctx.moveTo(-21,-76);ctx.lineTo(-5,-85);ctx.lineTo(18,-81);ctx.lineTo(9,-72);ctx.lineTo(-5,-75);ctx.closePath();ctx.fill();
+ }else if(['marlena','natalka','karolina'].includes(type)){
+  drawRounded(-23,-70,9,32,5,c[0]);drawRounded(16,-70,9,32,5,c[0]);
+  if(type==='marlena'){
+   drawRounded(5,-85,26,12,5,'#efa5c7');
+   ctx.fillStyle='#d97fac';ctx.beginPath();ctx.moveTo(16,-80);ctx.lineTo(3,-92);ctx.lineTo(3,-71);ctx.closePath();ctx.fill();
+   ctx.beginPath();ctx.moveTo(16,-80);ctx.lineTo(31,-92);ctx.lineTo(31,-71);ctx.closePath();ctx.fill();
+   ellipse(16,-80,5,5,'#fff2f6');
+  }
+ }
+ ctx.restore();
 }
 function act3Title(label,x,y){
  ctx.textAlign='center';ctx.font='bold 12px system-ui';
@@ -1118,65 +1192,89 @@ function act3Title(label,x,y){
  drawRounded(x-w/2,y-98,w,18,9,'#fffcf7ee');
  ctx.fillStyle='#765267';ctx.fillText(label,x,y-85)
 }
+function act3CarDrawing(x,y,scale=1,color='#9baec1'){
+ ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+ ellipse(0,37,149,24,'#49465b36');
+ // sweeping roofline, recognizable hood / trunk / doors
+ ctx.beginPath();ctx.moveTo(-154,15);ctx.lineTo(-150,-3);ctx.quadraticCurveTo(-135,-24,-99,-26);
+ ctx.lineTo(-64,-73);ctx.quadraticCurveTo(-53,-86,-31,-86);ctx.lineTo(37,-86);
+ ctx.quadraticCurveTo(61,-83,79,-54);ctx.lineTo(99,-26);ctx.lineTo(140,-19);
+ ctx.quadraticCurveTo(158,-12,158,7);ctx.lineTo(151,31);ctx.lineTo(-148,31);ctx.closePath();
+ ctx.fillStyle=color;ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#5b6477';ctx.stroke();
+ ctx.fillStyle='#cfe7ed';ctx.beginPath();ctx.moveTo(-72,-33);ctx.lineTo(-47,-74);
+ ctx.quadraticCurveTo(-40,-77,-24,-77);ctx.lineTo(3,-77);ctx.lineTo(3,-33);ctx.closePath();ctx.fill();
+ ctx.beginPath();ctx.moveTo(11,-77);ctx.lineTo(32,-77);ctx.quadraticCurveTo(47,-75,62,-49);
+ ctx.lineTo(72,-33);ctx.lineTo(11,-33);ctx.closePath();ctx.fill();
+ line(7,-73,7,18,'#607186',3);line(-104,-22,122,-22,'#ffffff55',2);
+ line(-73,6,39,6,'#f5f3ee66',2);drawRounded(18,-13,18,5,2,'#5a6576');
+ ellipse(-93,28,36,36,'#303545');ellipse(105,28,36,36,'#303545');
+ ellipse(-93,28,22,22,'#abb7c1');ellipse(105,28,22,22,'#abb7c1');
+ ellipse(-93,28,9,9,'#e2e8eb');ellipse(105,28,9,9,'#e2e8eb');
+ drawRounded(-151,-7,19,12,4,'#ffe7b4');drawRounded(140,-2,17,12,4,'#cf7076');
+ ctx.restore();
+}
+function act3RestaurantBuilding(){
+ drawRounded(564,30,363,227,17,'#f5e2d3','#cda9a5',4);
+ drawRounded(560,15,372,60,12,'#b84850');
+ drawRounded(575,88,96,124,9,'#c3e0e4','#fff9f1',4);
+ drawRounded(684,88,101,124,9,'#c3e0e4','#fff9f1',4);
+ drawRounded(800,86,91,165,11,'#88a4b0','#f7efea',4);
+ line(845,89,845,244,'#fff8ed',6);
+ for(const x of [623,736])line(x,93,x,207,'#fffaf2',3);
+ ctx.save();ctx.strokeStyle='#ffd25c';ctx.lineWidth=10;ctx.lineCap='round';
+ ctx.beginPath();ctx.moveTo(647,42);ctx.bezierCurveTo(662,-8,676,-7,694,44);ctx.moveTo(694,44);ctx.bezierCurveTo(712,-8,727,-7,741,42);ctx.stroke();ctx.restore();
+ ctx.fillStyle='#fff9ed';ctx.font='bold 17px system-ui';ctx.textAlign='center';ctx.fillText('McDonald',844,47);
+ drawRounded(771,228,135,12,4,'#b99a8e');
+}
 function act3Scene(time){
  const z=state.act3.zone,p=state.act3.phase;
- ctx.fillStyle=z==='street'?'#d9efd3':'#f7ece7';ctx.fillRect(0,0,W,H);
+ ctx.fillStyle=z==='inside'?'#f6eae2':'#dbeed4';ctx.fillRect(0,0,W,H);
  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
-  ctx.fillStyle=z==='street'?((x+y)%2?'#daedd2':'#dfefd7'):((x+y)%2?'#f9f0e9':'#f4e8e0');
-  ctx.fillRect(x*TILE,y*TILE,TILE,TILE)
+  ctx.fillStyle=z==='inside'?((x+y)%2?'#f7ede6':'#f3e5dd'):((x+y)%2?'#dbedce':'#d7eacc');
+  ctx.fillRect(x*TILE,y*TILE,TILE,TILE);
  }
  if(z==='car'){
-  drawRounded(34,32,892,245,24,'#9db8c5');
-  drawRounded(58,52,844,207,18,'#c5dce0');
-  for(let j=0;j<9;j++)ellipse(84+j*100,229,55,33,'#acc8b4');
-  drawRounded(35,315,890,262,28,'#e2cabe');
-  drawRounded(65,369,370,165,20,'#f8e9e1');
-  drawRounded(520,369,360,165,20,'#f8e9e1');
-  drawRounded(436,389,88,147,13,'#bbabb0');
-  act3Person(264,464,'kamis',2);
-  act3Person(680,464,'marlena',2);
-  ctx.fillStyle='#69566b';ctx.font='bold 22px system-ui';ctx.textAlign='center';
-  ctx.fillText('W drodze do McDonalda',W/2,346);
-  return
+  ctx.fillStyle='#b8cdd0';ctx.fillRect(0,0,W,296);
+  for(let j=0;j<11;j++)ellipse(40+j*95,244,52,32,'#a5bdb0');
+  drawRounded(30,318,900,252,30,'#d5c2b8');drawRounded(46,342,870,198,24,'#f0e4d8');
+  drawRounded(61,376,365,143,18,'#fff2e7');
+  drawRounded(524,376,366,143,18,'#fff2e7');
+  drawRounded(440,389,78,149,9,'#aaa6a7');
+  act3Person(265,455,'kamis',2);act3Person(686,455,'marlena',2);
+  ctx.fillStyle='#6d5874';ctx.font='bold 23px system-ui';ctx.textAlign='center';ctx.fillText('W drodze do McDonalda',W/2,342);
+  return;
  }
- if(z==='street'){
-  drawRounded(0,258,960,134,15,'#f0e2d9');
-  for(let x=0;x<960;x+=65)line(x,296,x+29,296,'#e2c9bd',2);
-  drawRounded(572,28,340,217,20,'#f5e3d9','#d4b7b3',5);
-  drawRounded(563,17,362,57,12,'#c65b68');
-  drawRounded(592,90,91,110,10,'#bddbdf');
-  drawRounded(694,90,94,110,10,'#bddbdf');
-  drawRounded(804,87,83,151,12,'#8eabb1');
-  line(843,93,843,232,'#f7f1e9',6);
-  ctx.textAlign='center';ctx.fillStyle='#fff8ed';ctx.font='bold 23px system-ui';ctx.fillText('McDONALD',745,52);
-  drawRounded(94,487,254,109,20,'#b6cbd7');
-  drawRounded(124,457,195,56,22,'#95a9b7');
-  drawRounded(122,530,51,55,9,'#687687');drawRounded(265,530,51,55,9,'#687687');
-  drawRounded(147,466,130,39,11,'#d6e8eb');
-  ellipse(91,530,12,12,'#fff5c6');ellipse(349,530,12,12,'#fff5c6');
-  for(const x of [100,340,485]){
-   line(x,250,x,146,'#917b81',8);ellipse(x,136,38,36,'#f0bfcf');ellipse(x+23,147,28,30,'#eab1c8');
+ if(z==='street'||z==='goodbye'){
+  drawRounded(0,262,W,128,5,'#eee1d6');
+  for(let x=0;x<W;x+=68)line(x,298,x+33,298,'#d9c1b8',2);
+  act3RestaurantBuilding();
+  act3CarDrawing(246,519,.78,'#97aec2');
+  act3CarDrawing(425,550,.55,'#d4b59c');
+  for(const x of [100,364,497]){
+   line(x,252,x,158,'#907985',8);ellipse(x,134,40,39,'#f2c0d2');ellipse(x+19,143,30,34,'#ecb2c9');
   }
-  if(p===1){act3Person(260,395,'kamis');act3Title('Kamiś',260,395)}
-  if(p>=6&&p<=8){act3Person((player.x+.5)*TILE+55,(player.y+.5)*TILE+7,'szymon',.87)}
-  if(p===7){act3Person(8.5*TILE,6.4*TILE,'szymon');act3Title('Szymon',8.5*TILE,6.4*TILE)}
- }else{
-  drawRounded(29,21,900,181,19,'#ecd0c5');drawRounded(45,38,870,140,11,'#f7e5d6');
-  for(let i=0;i<4;i++){drawRounded(84+i*215,77,174,90,8,'#bfd9d9');line(171+i*215,79,171+i*215,166,'#fff9ef',5)}
-  drawRounded(516,47,386,134,12,'#c99480');
-  for(let i=0;i<3;i++){drawRounded(550+i*111,36,101,42,8,'#4e6572');ctx.textAlign='center';ctx.fillStyle='#f8edcc';ctx.font='bold 12px system-ui';ctx.fillText('MENU',600+i*111,61)}
-  ellipse(457,388,163,94,'#987e8e50');drawRounded(355,326,240,112,28,'#e1b591');
-  drawRounded(366,335,218,94,23,'#f9d7ae');
-  for(let i=0;i<4;i++){drawRounded(385+i*45,366,34,20,4,'#fcf1d7');ellipse(402+i*45,367,13,6,'#e8ae61')}
-  drawRounded(400,556,149,78,12,'#bfd3d0');line(474,557,474,638,'#fff9f0',5);
-  const people=[['szymon',4,5],['piasek',10,6],['natalka',3,7],['karolina',12,6]];
-  for(const item of people){
-   const x=(item[1]+.5)*TILE,y=(item[2]+.5)*TILE;
-   act3Person(x,y,item[0]);act3Title(item[0].charAt(0).toUpperCase()+item[0].slice(1),x,y)
+  if(z==='goodbye'){
+   act3Person(8.5*TILE,5.45*TILE,'marlena',1.18);act3Title('Marlenka',8.5*TILE,5.45*TILE);
+   act3Person(9.5*TILE,5.55*TILE,'kamis',1.05);act3Title('Kamiś',9.5*TILE,5.55*TILE);
+   drawRounded(378,24,224,30,10,'#fff8f3dd');ctx.textAlign='center';ctx.fillStyle='#885f7a';ctx.font='bold 16px system-ui';ctx.fillText('Czas na pożegnanie…',491,45);
+  } else {
+   if(p===1){act3Person(260,395,'kamis');act3Title('Kamiś',260,395)}
+   if(p>=6&&p<=8)act3Person((player.x+.5)*TILE+55,(player.y+.5)*TILE+7,'szymon',.87);
+   if(p===7){act3Person(8.5*TILE,6.4*TILE,'szymon');act3Title('Szymon',8.5*TILE,6.4*TILE)}
+  }
+ }else {
+  drawRounded(28,19,900,181,18,'#ebcfc2');drawRounded(46,34,866,147,12,'#f6e6d8');
+  for(let i=0;i<4;i++){drawRounded(80+i*216,81,178,85,8,'#c6dfe0');line(171+i*216,85,171+i*216,164,'#fff7eb',5)}
+  drawRounded(524,52,364,123,12,'#ca9382');
+  for(let i=0;i<3;i++){drawRounded(548+i*114,37,105,39,6,'#526874');ctx.fillStyle='#fff4d3';ctx.textAlign='center';ctx.font='bold 12px system-ui';ctx.fillText(['ZESTAWY','NAPOJE','DESERY'][i],601+i*114,61)}
+  ellipse(481,389,171,91,'#987e8d42');drawRounded(349,322,259,118,28,'#dab08f');drawRounded(360,337,237,89,24,'#f6d7af');
+  for(let i=0;i<4;i++){drawRounded(380+i*49,367,35,22,4,'#fff1d7');ellipse(398+i*49,365,13,7,'#e3b062')}
+  drawRounded(398,554,152,78,10,'#a3c2c6');line(474,555,474,638,'#fff7ef',5);
+  for(const [name,x,y] of [['szymon',4,5],['piasek',10,6],['natalka',3,7],['karolina',12,6]]){
+   const px=(x+.5)*TILE,py=(y+.5)*TILE;act3Person(px,py,name,1);act3Title(name==='szymon'?'Szymon':name==='piasek'?'Piasek':name==='natalka'?'Natalka':'Karolina',px,py)
   }
  }
 }
-
 window.MarlenkaWorld={open:()=>startAct3(),progress:()=>({finished:state.act3.finished,phase:state.act3.phase})};
 function init(){setupInputs();setupThoughts();$('soundBtn').textContent=state.sound?'♪':'♪̸';if(state.scene==='drive'){$('memoryOverlay').hidden=false;renderDriveUI()}if(state.scene==='study'){$('memoryOverlay').hidden=false;renderStudyUI()}if(state.scene==='birthday'){$('memoryOverlay').hidden=false;renderBirthdayUI()}if(state.started){$('startBtn').innerHTML='Kontynuuj przygodę <span>↗</span>';$('newFromStartBtn').hidden=false}else $('newFromStartBtn').hidden=true;updateUI();requestAnimationFrame(render);}
 window.MarlenkaBridge={getState:()=>state,save,birthdayFinished:()=>Boolean(state.birthday?.rideFinished),openAct3:()=>startAct3()};
