@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<title>Marlenka</title>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7b7d2"/><stop offset="1" stop-color="#b9a0ec"/></linearGradient><filter id="shade"><feDropShadow dx="0" dy="8" stdDeviation="13" flood-color="#995382" flood-opacity=".21"/></filter></defs>
+<rect width="512" height="512" rx="120" fill="url(#bg)"/>
+<circle cx="385" cy="118" r="32" fill="#fff4f8" opacity=".52"/>
+<circle cx="114" cy="363" r="24" fill="#fff4f8" opacity=".5"/>
+<path d="M256 385 C231 363 98 280 98 188 C98 134 137 100 182 100 C213 100 237 119 256 145 C275 119 299 100 330 100 C375 100 414 134 414 188 C414 280 281 363 256 385Z" fill="#fffafd" filter="url(#shade)"/>
+<path d="M188 260 L188 186 L220 231 L256 180 L292 231 L324 186 L324 260" stroke="#bd72a5" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M198 303 C226 327 286 327 314 303" stroke="#d590bb" stroke-width="13" fill="none" stroke-linecap="round"/>
+</svg>
