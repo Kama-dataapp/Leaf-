@@ -212,7 +212,7 @@ function keyHandler(e,isUp){
  if(element&&(element.matches('input,textarea,select')||element.isContentEditable))return;
  const dirs={KeyW:'up',ArrowUp:'up',KeyA:'left',ArrowLeft:'left',KeyS:'down',ArrowDown:'down',KeyD:'right',ArrowRight:'right'};
  if(dirs[e.code]){e.preventDefault();e.stopImmediatePropagation();if(isUp)keys.delete(dirs[e.code]);else keys.add(dirs[e.code]);return}
- if(!isUp&&['KeyE','Space','Enter'].includes(e.code)){e.preventDefault();e.stopImmediatePropagation();if(dialogue){actions.querySelector('button')?.click()}else interact();return}
+ if(!isUp&&['KeyE','Space','Enter'].includes(e.code)){e.preventDefault();e.stopImmediatePropagation();if(dialogue){actions.lastElementChild?.click()}else interact();return}
  if(!isUp&&e.code==='Escape'){e.preventDefault();e.stopImmediatePropagation();if(dialogue)dismiss();else close()}
 }
 function clickMap(e){
