@@ -99,7 +99,7 @@
             <h3 id="memoryTitle">Nocny powrót</h3>
             <p id="memoryText"></p>
             <div id="memoryOptions" class="memory-options" hidden></div>
-            <div id="thoughtSnippet" class="thought-snippet" hidden></div><div class="memory-navigation"><button type="button" id="memoryPrev" class="memory-prev" disabled>← Poprzedni dialog</button><button type="button" id="memoryThoughtBtn" class="thought-memory-btn">💭 Dopisz swoje myśli</button></div>
+            <div id="thoughtSnippet" class="thought-snippet" hidden></div><div class="memory-navigation"><button type="button" id="memoryPrev" class="memory-prev" disabled>← Poprzedni dialog</button><button type="button" id="memoryThoughtBtn" class="thought-memory-btn" hidden>💭 Dopisz swoje myśli</button></div>
             <div id="memoryActions" class="memory-actions"></div>
             <div id="memoryNote" class="memory-note">Odtworzenie wspomnienia w stylu gry — dialogi są inspirowane opisem, nie dosłownymi cytatami.</div>
           </section>
@@ -927,10 +927,29 @@ function thoughtButton(label,action,primary=false){const b=document.createElemen
 function thoughtParagraph(text,klass){const p=document.createElement('p');p.textContent=text;if(klass)p.className=klass;$('thoughtBody').appendChild(p);return p}
 function thoughtScreen(title){$('thoughtTitle').textContent=title;$('thoughtBody').replaceChildren();$('thoughtActions').replaceChildren();$('thoughtLayer').hidden=false;pressed.clear();path=[]}
 function closeThoughts(){$('thoughtLayer').hidden=true;thoughtReturn=null;const t=$('thoughtsBtn');if(t)t.focus()}
-function refreshThoughtSnippet(){const panel=$('thoughtSnippet');if(!panel)return;const entry=personalThoughts[thoughtSceneKey()];if(!['drive','study','birthday','act4'].includes(state.scene)||!entry?.text){panel.hidden=true;panel.textContent='';$('memoryThoughtBtn').textContent='💭 Dopisz swoje myśli';return}
- panel.hidden=false;panel.textContent='💭 Moja myśl: '+entry.text.slice(0,180)+(entry.text.length>180?'…':'');$('memoryThoughtBtn').textContent='💭 Edytuj swoje myśli'}
+// Edytor dostępny dopiero po zakończeniu wspomnienia.
+function thoughtSceneComplete(){
+ if(state.scene==='drive')return state.drive.arrived&&state.drive.stage===12;
+ if(state.scene==='study')return state.study.finished&&state.study.stage===10;
+ if(state.scene==='birthday')return state.birthday.rideFinished&&state.birthday.stage===22;
+ if(state.scene==='act3')return state.act3.finished&&state.act3.phase===12;
+ if(state.scene==='act4')return state.act4.finished&&state.act4.stage===12;
+ return false;
+}
+function refreshThoughtSnippet(){
+ const panel=$('thoughtSnippet');if(!panel)return;
+ const button=$('memoryThoughtBtn');
+ const allow=thoughtSceneComplete();
+ button.hidden=!allow;
+ if(!allow){panel.hidden=true;panel.textContent='';return}
+ const entry=personalThoughts[thoughtSceneKey()];
+ if(!entry?.text){panel.hidden=true;panel.textContent='';button.textContent='💭 Dopisz swoje myśli po scenie';return}
+ panel.hidden=false;panel.textContent='💭 Moja myśl: '+entry.text.slice(0,180)+(entry.text.length>180?'…':'');
+ button.textContent='💭 Edytuj swoje myśli po scenie';
+}
 function openThoughtEditor(context=thoughtContext()){
  if(window.MarlenkaCloud?.isKamis()){window.MarlenkaCloud.openPanel();return}
+ if(!thoughtSceneComplete()){notify('💭 Myśli można dopisać dopiero po zakończeniu sceny.');return}
  thoughtLastKey=context.key;thoughtReturn='library';thoughtScreen('Moje myśli 💭');thoughtParagraph(context.title,'thought-guide');thoughtParagraph(window.MarlenkaCloud?.isMarlena()?'Zapisz swoją wersję. Po zapisaniu online Kamiś będzie mógł ją odczytać w swoim panelu.':'Marlenko, jak Ty pamiętasz ten moment? Wpis zostanie lokalnie, dopóki nie zalogujesz się na konto Marlenki albo nie wyślesz go Kamisiowi.');
  const label=document.createElement('label');label.textContent='Moja wersja wspomnienia';label.htmlFor='thoughtTextarea';$('thoughtBody').appendChild(label);
  const textarea=document.createElement('textarea');textarea.id='thoughtTextarea';textarea.maxLength=850;textarea.placeholder='Co wtedy myślałam, co zapamiętałam, co chciałabym dopowiedzieć…';textarea.value=personalThoughts[context.key]?.text||'';$('thoughtBody').appendChild(textarea);
