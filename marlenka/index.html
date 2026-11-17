@@ -898,7 +898,7 @@ function driveScene(time){
 function targetMarkers(time){const q=currentQuest();for(const id of q.target){const o=sceneObjects().find(p=>p.id===id)||byId[id];if(!o)continue;const x=(o.x+.5)*TILE,y=(o.y-.2)*TILE;const h=10*Math.sin(time/340);ellipse(x,y+27,18,6,'#b9689c40');ellipse(x,y+h,21,21,'#fff7eb');ellipse(x,y+h,17,17,'#f2a6cc');emoji('✦',x,y+h+1,24)} }
 function render(time){elapsed=time;const mobile=matchMedia('(max-width: 600px)').matches,nw=mobile?576:960,nh=mobile?720:640;if(viewW!==nw||viewH!==nh){viewW=nw;viewH=nh;canvas.width=nw;canvas.height=nh}else if(canvas.width!==nw){canvas.width=nw;canvas.height=nh}
  cameraX=W>=viewW?Math.max(0,Math.min(W-viewW,(player.x+.5)*TILE-viewW/2)):(W-viewW)/2;cameraY=H>=viewH?Math.max(0,Math.min(H-viewH,(player.y+.5)*TILE-viewH/2)):(H-viewH)/2;
- ctx.clearRect(0,0,viewW,viewH);ctx.fillStyle='#f6deeb';ctx.fillRect(0,0,viewW,viewH);if(['drive','study','birthday','act4'].includes(state.scene))cameraX=(W-viewW)/2;ctx.save();ctx.translate(-cameraX,-cameraY);if(state.scene==='act4')act4Scene(time);else if(state.scene==='act3')act3Scene(time);else if(state.scene==='birthday')birthdayScene(time);else if(state.scene==='study')studyScene(time);else if(state.scene==='drive')driveScene(time);else if(state.scene==='town')townScene(time);else if(state.scene==='alley')alleyScene(time);else{sceneBackground();furniture();catDraw(time)}if(!['drive','study','birthday','act4'].includes(state.scene)){if(state.scene==='act3'){if(state.act3.zone!=='car'){if(state.act3.phase>=5&&state.act3.phase<=8)act3Person((player.fromX+(player.x-player.fromX)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,(player.fromY+(player.y-player.fromY)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,'kamis',1);else characterDraw(time)}}else characterDraw(time);targetMarkers(time)}ctx.restore();
+ ctx.clearRect(0,0,viewW,viewH);ctx.fillStyle='#f6deeb';ctx.fillRect(0,0,viewW,viewH);if(['drive','study','birthday','act4'].includes(state.scene))cameraX=(W-viewW)/2;ctx.save();ctx.translate(-cameraX,-cameraY);if(state.scene==='act4')act4Scene(time);else if(state.scene==='act3')act3Scene(time);else if(state.scene==='birthday')birthdayScene(time);else if(state.scene==='study')studyScene(time);else if(state.scene==='drive')driveScene(time);else if(state.scene==='town')townScene(time);else if(state.scene==='alley')alleyScene(time);else{sceneBackground();furniture();catDraw(time)}if(!['drive','study','birthday','act4'].includes(state.scene)){if(state.scene==='act3'){if(state.act3.zone!=='car'){if((state.act3.phase>=5&&state.act3.phase<=8)||state.act3.zone==='goodbye')act3Person((player.fromX+(player.x-player.fromX)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,(player.fromY+(player.y-player.fromY)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,'kamis',1);else characterDraw(time)}}else characterDraw(time);targetMarkers(time)}ctx.restore();
  if(!isLocked()){
   if(path.length&&time-lastStep>155){const next=path.shift();const dx=next[0]-player.x,dy=next[1]-player.y;const dir=Object.keys(dirs).find(k=>dirs[k][0]===dx&&dirs[k][1]===dy);if(dir)step(dir);else path=[];if(!path.length&&path.targetObject){const id=path.targetObject;delete path.targetObject;setTimeout(()=>{if(!isLocked()&&((sceneObjects().find(o=>o.id===id)||byId[id])&&distance(sceneObjects().find(o=>o.id===id)||byId[id])<=1.75))interact(id)},180)}}
   else if(pressed.size&&time-lastStep>165){const dir=[...pressed].at(-1);if(dirs[dir]){path=[];step(dir)}}
@@ -983,7 +983,7 @@ function act3Objects(){
   o('a3szymon','Szymon',4,5),o('a3piasek','Piasek',10,6),o('a3natalka','Natalka',3,7),o('a3karolina','Karolina',12,6)
  ];
 }
-function act3CanWalk(x,y){if(state.act3.zone==='street')return !(x>=9&&x<=13&&y<=3)&&!(x>=2&&x<=4&&y===8);if(state.act3.zone==='inside')return !(x>=9&&x<=13&&y<=2)&&!(x>=6&&x<=8&&y>=5&&y<=6);if(state.act3.zone==='goodbye')return !(x>=2&&x<=5&&y>=7);return true}
+function act3CanWalk(x,y){if(state.act3.zone==='street')return !(x>=9&&x<=13&&y<=3)&&!(x>=2&&x<=4&&y===8);if(state.act3.zone==='inside')return !(x>=9&&x<=13&&y<=2)&&!(x>=6&&x<=8&&y>=5&&y<=6);if(state.act3.zone==='goodbye')return !(x>=2&&x<=5&&y>=7)&&!(x===8&&y===5);return true}
 function act3Quest(){
  const content=[
  ['01','Pomysł Marlenki','Rozmowa w samochodzie przed spotkaniem.','a3door'],
@@ -996,7 +996,7 @@ function act3Quest(){
  ['08','Pytanie Szymona','W drodze powrotnej Szymon chce o coś zapytać.','a3road'],
  ['09','Wracajcie do Maka','Szymon dał się nabrać. Wróć do restauracji.','a3entry'],
  ['10','Znajomi czekają','Dokończcie wspólne spotkanie przy stoliku.','a3table'],
- ['11','Chwila z Marlenką','Przed rozjazdem opowiedz Marlenie, że Szymon się nabrał.','a3marlena'],
+ ['11','Chwila z Marlenką','Sterujesz Kamisiem. Podejdź do Marlenki, żeby opowiedzieć jej o udanym żarcie.','a3marlena'],
  ['12','Pożegnanie','Podejdźcie do aut i zakończcie spotkanie.','a3farewell'],
  ['✓','Akt III ukończony!','Wasza rozmowa i rozjazd zostały zapisane. Kolejne spotkanie: korki u Kamisia.','a3farewell']
  ];
@@ -1256,11 +1256,11 @@ function act3Scene(time){
   }
   if(z==='goodbye'){
    act3Person(8.5*TILE,5.45*TILE,'marlena',1.18);act3Title('Marlenka',8.5*TILE,5.45*TILE);
-   act3Person(9.5*TILE,5.55*TILE,'kamis',1.05);act3Title('Kamiś',9.5*TILE,5.55*TILE);
+   // Kamiś is the controllable player here; don't draw a second stationary copy.
    drawRounded(378,24,224,30,10,'#fff8f3dd');ctx.textAlign='center';ctx.fillStyle='#885f7a';ctx.font='bold 16px system-ui';ctx.fillText('Czas na pożegnanie…',491,45);
   } else {
    if(p===1){act3Person(260,395,'kamis');act3Title('Kamiś',260,395)}
-   if(p>=6&&p<=8)act3Person((player.x+.5)*TILE+55,(player.y+.5)*TILE+7,'szymon',.87);
+   if((p===6||p===8))act3Person((player.x+.5)*TILE+55,(player.y+.5)*TILE+7,'szymon',.87);
    if(p===7){act3Person(8.5*TILE,6.4*TILE,'szymon');act3Title('Szymon',8.5*TILE,6.4*TILE)}
   }
  }else {
