@@ -77,6 +77,10 @@
 .account-note{background:#fff2f9;border:1px solid #f6dfe9;padding:12px 13px;border-radius:12px;margin:10px 0;color:#8e6887}.account-entry{border:1px solid #f2e0ef;border-radius:15px;padding:14px 15px;margin:10px 0;background:white}.account-entry h3{margin:0 0 5px;color:#885d81;font-size:14px}.account-entry p{white-space:pre-wrap;overflow-wrap:anywhere;color:#6e5a6c;margin:7px 0}.account-entry small{color:#ad8ca4}.account-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#bf8aaf;font-weight:900;margin-bottom:10px}.account-status{font-size:12px;color:#956f91}.account-loader{min-height:33px}
 @media(max-width:600px){.account-top-button span{display:none}.account-top-button{padding:9px}.account-head{padding:13px}.account-body{padding:14px 17px}.top-actions{gap:5px}}
 
+/* Przy starcie ukryj rozgrywkę. Dopiero zweryfikowane konto z rolą otwiera grę. */
+html:not(.marlenka-auth-granted) .game-shell{visibility:hidden;pointer-events:none}
+html:not(.marlenka-auth-granted) #accountLayer{display:grid}
+html:not(.marlenka-auth-granted) #accountClose{display:none!important}
 </style>
 </head>
 <body>
@@ -169,7 +173,7 @@
 </div>
 <script>window.MARLENKA_CLOUD_CONFIG={url:'https://qlfkkbqjntngzmpwayee.supabase.co',publishableKey:'sb_publishable_gfjTYomeiklpGNvPQRaVDg_XJlkvrwE'};</script>
 <script src="./cloud-config.js"></script>
-<div class="account-layer" id="accountLayer" hidden role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+<div class="account-layer" id="accountLayer" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
  <section class="account-card"><header class="account-head"><h2 id="accountTitle">🔐 Konta Marlenki</h2><button id="accountClose" type="button">✕ Zamknij</button></header><div class="account-body" id="accountBody"><p>Ładowanie…</p></div></section>
 </div>
 <script>
@@ -277,7 +281,7 @@ function sound(kind='blip'){if(!state.sound)return;try{const A=window.AudioConte
 function notify(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,2600)}
 function award(amount,message){state.hearts+=amount;sound('collect');updateUI();if(message)notify(`+${amount} 💗  ${message}`);scheduleSave()}
 function canWalk(x,y){return x>=1&&x<14&&y>=1&&y<9&&(state.scene==='act3'?act3CanWalk(x,y):!(state.scene==='room'?blocked:townBlocked).has(`${x},${y}`))}
-function isLocked(){return !$('accountLayer').hidden||state.scene==='birthday'||state.scene==='drive'||state.scene==='study'||state.scene==='act4'||state.scene==='act5'||!started||!$('startScreen').hidden||!$('dialogOverlay').hidden||!$('panelModal').hidden||!$('endingScreen').hidden||!$('kissScreen').hidden}
+function isLocked(){return !document.documentElement.classList.contains("marlenka-auth-granted")||!$('accountLayer').hidden||state.scene==='birthday'||state.scene==='drive'||state.scene==='study'||state.scene==='act4'||state.scene==='act5'||!started||!$('startScreen').hidden||!$('dialogOverlay').hidden||!$('panelModal').hidden||!$('endingScreen').hidden||!$('kissScreen').hidden}
 function step(dir){if(isLocked())return false;const [dx,dy]=dirs[dir],nx=player.x+dx,ny=player.y+dy;player.face=dir;if(!canWalk(nx,ny)){path=[];return false}player.fromX=player.x;player.fromY=player.y;player.x=nx;player.y=ny;player.toX=nx;player.toY=ny;player.movedAt=performance.now();lastStep=player.movedAt;state.x=nx;state.y=ny;state.face=dir;scheduleSave();return true}
 function shortestPath(x,y,targets){const origin=`${x},${y}`,queue=[[x,y]],visited=new Set([origin]),parents=new Map(),masks=[[0,1],[1,0],[-1,0],[0,-1]];while(queue.length){const [cx,cy]=queue.shift();if(targets.has(`${cx},${cy}`)){const route=[];let k=`${cx},${cy}`;while(k!==origin){const [ix,iy]=k.split(',').map(Number);route.push([ix,iy]);k=parents.get(k)}return route.reverse()}for(const [dx,dy] of masks){const nx=cx+dx,ny=cy+dy,k=`${nx},${ny}`;if(canWalk(nx,ny)&&!visited.has(k)){parents.set(k,`${cx},${cy}`);visited.add(k);queue.push([nx,ny])}}}return []}
 function walkToTile(tx,ty){if(!canWalk(tx,ty))return false;const route=shortestPath(player.x,player.y,new Set([`${tx},${ty}`]));if(route.length){path=route;return true}return player.x===tx&&player.y===ty}
@@ -350,7 +354,7 @@ function showMirror(){modal('Lustro Marlenki 🪞','ZMIEŃ WYGLĄD POSTACI');par
 function showMenu(){modal('Mała przerwa 🌷','MENU GRY');para('Twoja przygoda zapisuje się automatycznie. Niczego nie stracisz po zamknięciu strony (o ile przeglądarka zachowa dane).');addAction('Kontynuuj',closeModal,true);if(state.birthday.rideFinished)addAction('🌸 Akt III — McDonald',()=>{closeModal();startAct3()});addAction(state.sound?'🔊 Wyłącz dźwięk':'🔈 Włącz dźwięk',()=>{state.sound=!state.sound;save();closeModal();$('soundBtn').textContent=state.sound?'♪':'♪̸';notify(state.sound?'Dźwięk włączony 🎶':'Dźwięk wyłączony 🤫')});if(state.act3.finished)addAction('📐 Akt IV — Korki u Kamisia',()=>{closeModal();startAct4()},true);if(state.act4.finished)addAction('🎱 Akt V — Bilard za korki',()=>{closeModal();startAct5()},true);addAction('Nowa gra',confirmRestart)}
 function confirmRestart(){modal('Zacząć od początku?','UWAGA — NOWA GRA');const div=document.createElement('div');div.className='warning';div.textContent='To zresetuje Rozdział I, wszystkie trzy wspomnienia Rozdziału II oraz zebrane serduszka na tym urządzeniu.';$('modalBody').appendChild(div);addAction('Anuluj',showMenu);addAction('Tak, od nowa 💞',()=>{reset();closeModal();begin(true)},true)}
 function reset(){const s=fresh();s.sound=state.sound;s.hair=state.hair;s.outfit=state.outfit;state=s;player={x:7,y:7,fromX:7,fromY:7,toX:7,toY:7,movedAt:0,face:'down'};path=[];pressed.clear();save();updateUI()}
-function begin(newGame){started=true;state.started=true;$('startScreen').hidden=true;$('endingScreen').hidden=true;updateUI();save();if(state.scene==='drive'){renderDriveUI();return}if(state.scene==='study'){renderStudyUI();return}if(state.scene==='act3'){if(state.act3.phase===0)act3CarIntro();return}if(state.scene==='act4'){renderAct4UI();return}if(state.scene==='act5'){renderAct5UI();return}if(newGame){showDialogue([{who:'Narrator',text:'Pewnego pięknego poranka Marlenka obudziła się w różowym pokoju. Za oknem tańczyły płatki kwiatów…'},{who:'Marlenka',text:'Ale tu ślicznie! Zaraz… czy na biurku leży list zaadresowany do mnie?'},{who:'Narrator',text:'Użyj strzałek albo różowego krzyżaka, aby się poruszać. Podejdź do biurka i naciśnij E lub przycisk interakcji.'}])}else{notify('Witaj z powrotem, Marlenko! 🌷')}}
+function begin(newGame){if(!document.documentElement.classList.contains('marlenka-auth-granted')){window.MarlenkaAuthGate?.show?.();return}started=true;state.started=true;$('startScreen').hidden=true;$('endingScreen').hidden=true;updateUI();save();if(state.scene==='drive'){renderDriveUI();return}if(state.scene==='study'){renderStudyUI();return}if(state.scene==='act3'){if(state.act3.phase===0)act3CarIntro();return}if(state.scene==='act4'){renderAct4UI();return}if(state.scene==='act5'){renderAct5UI();return}if(newGame){showDialogue([{who:'Narrator',text:'Pewnego pięknego poranka Marlenka obudziła się w różowym pokoju. Za oknem tańczyły płatki kwiatów…'},{who:'Marlenka',text:'Ale tu ślicznie! Zaraz… czy na biurku leży list zaadresowany do mnie?'},{who:'Narrator',text:'Użyj strzałek albo różowego krzyżaka, aby się poruszać. Podejdź do biurka i naciśnij E lub przycisk interakcji.'}])}else{notify('Witaj z powrotem, Marlenko! 🌷')}}
 function drawRounded(x,y,w,h,r,fill,stroke,width=1){ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}}
 function ellipse(x,y,rx,ry,fill){ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
 function line(x1,y1,x2,y2,color,width=1){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke()}
@@ -1040,6 +1044,7 @@ function act3CarIntro(){
  ],()=>{act3Phase(1);act3Move('street',3,7);notify('Podejdź do wejścia do McDonalda.')})
 }
 function startAct3(){
+ if(!document.documentElement.classList.contains('marlenka-auth-granted')){window.MarlenkaAuthGate?.show?.();return}
  if(!state.birthday?.rideFinished){notify('Najpierw ukończ osiemnastkę Szymona.');return}
  started=true;state.started=true;state.scene='act3';state.act3.visited=true;
  if(state.act3.finished&&!state.act3.closingPlayed){state.act3.finished=false;state.act3.phase=10;state.act3.zone='goodbye';state.act3.pos={x:6,y:6}}
@@ -1301,6 +1306,7 @@ function act3Scene(time){
 // Akt IV — następne spotkanie: umówione korki matematyczne w domu Kamisia.
 // Nie mieszać z wcześniejszymi korkami u kolegi; myśli Marlenki to interpretacja, nie cytat.
 function startAct4(){
+ if(!document.documentElement.classList.contains('marlenka-auth-granted')){window.MarlenkaAuthGate?.show?.();return}
  if(!state.act3.finished){notify('Najpierw zakończ spotkanie w McDonaldzie. 💞');return}
  for(const id of ['endingScreen','kissScreen','startScreen','panelModal','dialogOverlay'])$(id).hidden=true;
  path=[];pressed.clear();started=true;state.started=true;state.scene='act4';state.act4.visited=true;
@@ -1420,6 +1426,7 @@ function act4Scene(time){
 
 /* ACT V: bilard za korepetycje — spójny z filmowymi wspomnieniami Marlenki. */
 function startAct5(){
+ if(!document.documentElement.classList.contains('marlenka-auth-granted')){window.MarlenkaAuthGate?.show?.();return}
  if(!state.act4.finished){notify('Najpierw ukończ weekendowe korepetycje. 📐');return}
  for(const id of ['endingScreen','kissScreen','startScreen','panelModal','dialogOverlay'])$(id).hidden=true;
  started=true;state.started=true;path=[];pressed.clear();state.scene='act5';state.act5.visited=true;
@@ -1538,7 +1545,7 @@ init();
 'use strict';
 const $=id=>document.getElementById(id);
 const cfg=window.MARLENKA_CLOUD_CONFIG||{};
-let client=null,user=null,member=null,busy=false,remoteRows=[];
+let client=null,user=null,member=null,busy=false,remoteRows=[],authCheckId=0;
 const enabled=()=>/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test((cfg.url||'').trim())&&/^(sb_publishable_|eyJ)/.test(cfg.publishableKey||'');
 const active=()=>Boolean(user&&member);
 const isMarlena=()=>active()&&member.role==='marlena';
@@ -1547,27 +1554,56 @@ const body=()=>$('accountBody');
 const para=(t,cls='')=>{const p=document.createElement('p');p.textContent=t;if(cls)p.className=cls;body().appendChild(p);return p};
 const btn=(t,cb,primary=false)=>{const b=document.createElement('button');b.type='button';b.textContent=t;if(primary)b.className='primary';b.addEventListener('click',cb);body().appendChild(b);return b};
 function headline(t){const h=document.createElement('div');h.className='account-label';h.textContent=t;body().appendChild(h)}
+function setGate(authorized){
+ const root=document.documentElement;
+ const previous=root.classList.contains('marlenka-auth-granted');
+ root.classList.toggle('marlenka-auth-granted',Boolean(authorized));
+ $('accountClose').hidden=!authorized;
+ if(!authorized){$('accountLayer').hidden=false}
+ else if(!previous){$('accountLayer').hidden=true}
+}
 function openPanel(){$('accountLayer').hidden=false;renderPanel()}
-function closePanel(){$('accountLayer').hidden=true}
-function setStatus(){const label=isKamis()?'👑 Kamiś':isMarlena()?'🌷 Marlenka':user?'⚠️ Brak roli':'🔐 Konto';$('accountBtn').textContent=label;const el=$('thoughtsBtn');if(el&&isKamis()){el.innerHTML='📬 <span>Panel Kamisia</span>'}else if(el){el.innerHTML='💭 <span>Moje myśli</span>'}}
+function closePanel(){if(!active()){openPanel();return}$('accountLayer').hidden=true}
+function setStatus(){setGate(active());const label=isKamis()?'👑 Kamiś':isMarlena()?'🌷 Marlenka':user?'⚠️ Brak roli':'🔐 Konto';$('accountBtn').textContent=label;const el=$('thoughtsBtn');if(el&&isKamis()){el.innerHTML='📬 <span>Panel Kamisia</span>'}else if(el){el.innerHTML='💭 <span>Moje myśli</span>'}}
 async function beginAuth(){
- if(!enabled())return;
- if(!window.supabase?.createClient){client=null;return}
+ if(!enabled()){setStatus();renderPanel();return}
+ if(!window.supabase?.createClient){client=null;setStatus();renderPanel();return}
  try{
   client=window.supabase.createClient(cfg.url.replace(/\/$/,''),cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-  client.auth.onAuthStateChange((_ev,session)=>{queueMicrotask(()=>refreshIdentity(session?.user||null))});
-  const {data,error}=await client.auth.getSession();if(error)throw error;await refreshIdentity(data.session?.user||null);
- }catch(e){console.warn('Marlenka: auth initialization failed',e);client=null;setStatus()}
-}
-async function refreshIdentity(nextUser){
- user=nextUser;member=null;remoteRows=[];
- if(user){
-  const {data,error}=await client.from('marlenka_members').select('role').eq('user_id',user.id).maybeSingle();
-  if(error)console.warn('Unable to read role',error);
-  if(data?.role)member=data;
-  if(isMarlena())await loadMine();
+  client.auth.onAuthStateChange((_event,_session)=>{
+   // Never await auth APIs inside this callback; schedule a new verification.
+   queueMicrotask(()=>{void refreshIdentity()});
+  });
+  await refreshIdentity();
+ }catch(e){
+  console.warn('Marlenka: auth initialization failed',e);
+  client=null;user=null;member=null;setStatus();renderPanel();
  }
- setStatus();if(!$('accountLayer').hidden)renderPanel();
+}
+async function refreshIdentity(){
+ const request=++authCheckId;
+ // Authorization is based on server-verified identity + RLS-protected role, not a local flag or user metadata.
+ let verifiedUser=null,verifiedMember=null;
+ try{
+  if(client){
+   const {data:identity,error:identityError}=await client.auth.getUser();
+   if(identityError)throw identityError;
+   verifiedUser=identity?.user||null;
+   if(verifiedUser){
+    const {data:role,error:roleError}=await client.from('marlenka_members').select('role').eq('user_id',verifiedUser.id).maybeSingle();
+    if(roleError)throw roleError;
+    if(role&&(role.role==='kamis'||role.role==='marlena'))verifiedMember=role;
+   }
+  }
+ }catch(e){
+  console.warn('Marlenka: login verification unavailable',e);
+  verifiedUser=null;verifiedMember=null;
+ }
+ if(request!==authCheckId)return;
+ user=verifiedUser;member=verifiedMember;remoteRows=[];
+ setStatus();
+ if(!$('accountLayer').hidden)renderPanel();
+ if(isMarlena())void loadMine().catch(e=>console.warn('Unable to load thoughts',e));
 }
 async function loadMine(){if(!client||!isMarlena())return;const {data,error}=await client.from('marlenka_thoughts').select('id,scene_key,title,body,updated_at').order('updated_at',{ascending:false});if(error){console.warn('Cannot load thoughts',error);return}remoteRows=data||[];window.MarlenkaThoughts?.importCloudRows(remoteRows)}
 async function listAll(){if(!client||!isKamis())return{data:[],error:new Error('Brak uprawnień')};return await client.from('marlenka_thoughts').select('id,scene_key,title,body,updated_at').order('updated_at',{ascending:false})}
@@ -1595,11 +1631,15 @@ async function signIn(e){e.preventDefault();if(!client)return;const input=$('acc
  let error=null;try{const response=await client.auth.signInWithOtp({email,options:{emailRedirectTo:'https://kama-dataapp.github.io/Leaf-/marlenka/',shouldCreateUser:true}});error=response.error}catch(e){error=e}
  b.disabled=false;b.textContent='Wyślij link logowania';const smtpIssue=error&&(/email_address_not_authorized/i.test(String(error.code||''))||/email address not authorized/i.test(String(error.message||'')));const previous=body().querySelector('[data-auth-feedback]');if(previous)previous.remove();const networkIssue=error&&(/failed to fetch|networkerror|network request failed|load failed/i.test(String(error.message||error)));const message=error?(networkIssue?'Brak połączenia z serwerem logowania (Failed to fetch). Użyj przycisku „Sprawdź połączenie” poniżej. W razie potrzeby otwórz stronę w Chrome i zmień Wi-Fi na internet komórkowy.':smtpIssue?'Wysyłka e-maili wymaga skonfigurowania SMTP w Supabase.':('Nie udało się wysłać linku: '+String(error.message||error))):'Sprawdź skrzynkę pocztową. Otwórz otrzymany link na tym samym urządzeniu, żeby zalogować się do Marlenki.';const feedback=para(message,'account-note');feedback.dataset.authFeedback='1'
 }
-async function logout(){if(!client)return;await client.auth.signOut();user=null;member=null;remoteRows=[];setStatus();renderPanel()}
+async function logout(){
+ // Lock immediately, including when sign-out cannot reach the network.
+ ++authCheckId;user=null;member=null;remoteRows=[];setStatus();renderPanel();
+ if(client){try{await client.auth.signOut()}catch(e){console.warn('Marlenka: sign-out error',e)}}
+}
 function renderPanel(){const b=body();b.replaceChildren();
- if(!enabled()){headline('PRZYGOTOWANO PANEL LOGOWANIA');para('Gra działa normalnie, ale konta wymagają podłączenia prywatnej bazy Supabase. Jeszcze nie są aktywne.','account-note');para('Aby włączyć automatyczną synchronizację, uruchom skrypt database.sql w Supabase i uzupełnij cloud-config.js publicznym adresem projektu oraz kluczem publishable.');para('Do tego czasu Marlenka może zapisywać myśli lokalnie i wysyłać je ręcznie.');btn('Wróć do gry',closePanel,true);return}
- if(!client){headline('NIE UDAŁO SIĘ POŁĄCZYĆ');para('Sprawdź internet i ustawienia cloud-config.js.');btn('Wróć do gry',closePanel,true);return}
- if(!user){headline('DOSTĘP TYLKO DLA WAS');para('Zaloguj się własnym adresem e-mail. Link logowania zostanie wysłany na Twój adres. Prywatny dostęp działa tylko dla dwóch zaproszonych e-maili; role przydzielają się automatycznie po ich potwierdzeniu.');const form=document.createElement('form');const label=document.createElement('label');label.textContent='Adres e-mail';label.htmlFor='accountEmail';const input=document.createElement('input');input.type='email';input.id='accountEmail';input.required=true;input.placeholder='twoj@email.pl';input.autocomplete='email';const sub=document.createElement('button');sub.className='primary';sub.type='submit';sub.id='emailSignIn';sub.textContent='Wyślij link logowania';form.append(label,input,sub);form.addEventListener('submit',signIn);b.appendChild(form);btn('🔎 Sprawdź połączenie z serwerem',diagnoseCloudConnection);para('Nie udostępniaj nikomu linku logowania. Po pierwszym potwierdzeniu zaproszonego adresu rola zostanie nadana automatycznie.');return}
+ if(!enabled()){headline('LOGOWANIE JEST WYMAGANE');para('Brak poprawnej konfiguracji serwera logowania. Gra pozostaje zablokowana, dopóki połączenie nie zostanie przywrócone.','account-note');btn('Spróbuj ponownie',()=>location.reload(),true);return}
+ if(!client){headline('NIE UDAŁO SIĘ POŁĄCZYĆ');para('Gra wymaga zalogowania. Sprawdź internet, a potem spróbuj ponownie.','account-note');btn('Ponów próbę',()=>location.reload(),true);return}
+ if(!user){headline('🔒 NAJPIERW LOGOWANIE');para('Aby rozpocząć grę lub kontynuować wspomnienia, zaloguj się na swoje konto. Bez logowania rozgrywka nie jest dostępna.');para('Zaloguj się własnym adresem e-mail. Link logowania zostanie wysłany na Twój adres. Prywatny dostęp działa tylko dla dwóch zaproszonych e-maili; role przydzielają się automatycznie po ich potwierdzeniu.');const form=document.createElement('form');const label=document.createElement('label');label.textContent='Adres e-mail';label.htmlFor='accountEmail';const input=document.createElement('input');input.type='email';input.id='accountEmail';input.required=true;input.placeholder='twoj@email.pl';input.autocomplete='email';const sub=document.createElement('button');sub.className='primary';sub.type='submit';sub.id='emailSignIn';sub.textContent='Wyślij link logowania';form.append(label,input,sub);form.addEventListener('submit',signIn);b.appendChild(form);btn('🔎 Sprawdź połączenie z serwerem',diagnoseCloudConnection);para('Nie udostępniaj nikomu linku logowania. Po pierwszym potwierdzeniu zaproszonego adresu rola zostanie nadana automatycznie.');return}
  if(!member){headline('KONTO NIEAKTYWNE');para('Zalogowano: '+user.email);para('To konto nie ma jeszcze uprawnień. Dostęp otrzyma tylko potwierdzony, zaproszony adres e-mail. Jeżeli właśnie kliknięto link potwierdzający, odśwież grę i sprawdź ponownie.','account-note');btn('Wyloguj',logout);return}
  headline(isKamis()?'👑 PANEL KAMISIA':'🌷 KONTO MARLENKI');para(user.email||'Zalogowano');
  if(isKamis()){
@@ -1620,9 +1660,13 @@ function showEntries(rows,error,own=false){if(error){para('Błąd pobierania: '+
 }
 $('accountBtn').addEventListener('click',openPanel);$('accountClose').addEventListener('click',closePanel);$('accountLayer').addEventListener('click',e=>{if(e.target===$('accountLayer'))closePanel()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('accountLayer').hidden)closePanel()});
 window.MarlenkaCloud={isMarlena,isKamis,openPanel,saveThought};
+window.MarlenkaAuthGate={allowed:active,show:openPanel};
+setGate(false);
+headline('🔐 Weryfikowanie konta');
+para('Sprawdzam, czy masz aktywną sesję i uprawnienia do gry…','account-note');
 if(enabled()){
- const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';sc.onload=beginAuth;sc.onerror=()=>{console.warn('Supabase SDK unavailable');setStatus()};document.head.appendChild(sc)
-}else setStatus();
+ const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';sc.onload=beginAuth;sc.onerror=()=>{console.warn('Supabase SDK unavailable');setStatus();renderPanel()};document.head.appendChild(sc)
+}else{setStatus();renderPanel()}
 })();
 </script>
 
