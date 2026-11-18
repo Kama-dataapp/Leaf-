@@ -396,7 +396,11 @@ function furniture(){// bed frame
  drawRounded(606,275,123,13,6,'#e7c5d7');for(let i=0;i<6;i++)emoji('✿',566+i*38,299+(i%2)*13,12);
 }
 function catDraw(time){const x=7*TILE+TILE/2,y=4*TILE+TILE/2;const bob=Math.sin(time/450)*2;ctx.save();ctx.translate(x,y+bob);ellipse(0,21,29,9,'#ba90ab55');ctx.strokeStyle='#d0a3a4';ctx.lineWidth=10;ctx.lineCap='round';ctx.beginPath();ctx.arc(19,3,24,2.1,5.4);ctx.stroke();ellipse(0,8,24,19,'#f4e1d3');ctx.beginPath();ctx.moveTo(-19,-5);ctx.lineTo(-24,-29);ctx.lineTo(-4,-16);ctx.moveTo(19,-5);ctx.lineTo(24,-29);ctx.lineTo(4,-16);ctx.fillStyle='#f2ddd2';ctx.fill();ellipse(0,-9,22,21,'#f9e8da');ellipse(-9,-10,2.8,4,'#73556c');ellipse(9,-10,2.8,4,'#73556c');ellipse(0,-1,3,2.4,'#e59cb0');line(-4,2,-13,5,'#a98a92');line(4,2,13,5,'#a98a92');line(-13,-2,-26,-5,'#b69aa0');line(13,-2,26,-5,'#b69aa0');emoji('🎀',13,-28,19);ctx.restore()}
-function characterDraw(time){const stepSince=Math.min(1,(time-player.movedAt)/145);const easing=1-Math.pow(1-stepSince,3);const x=(player.fromX+(player.x-player.fromX)*easing+.5)*TILE;const y=(player.fromY+(player.y-player.fromY)*easing+.5)*TILE;const walking=stepSince<1;const bounce=walking?Math.sin(stepSince*Math.PI)*-6:Math.sin(time/700)*.8;const hair=HAIR[state.hair],cloth=OUTFIT[state.outfit];ctx.save();ctx.translate(x,y+bounce);ellipse(0,23,22,7,'#8d6f8255');
+// Jedna, wspólna sylwetka Marlenki dla całej gry: te same włosy, strój i kokardka.
+function drawMarlenkaAvatar(x,y,scale=1,face='down',bounce=0){
+ const hair=HAIR[state.hair]||HAIR[0],cloth=OUTFIT[state.outfit]||OUTFIT[0];
+ ctx.save();ctx.translate(x,y+bounce);ctx.scale(scale,scale);
+ellipse(0,23,22,7,'#8d6f8255');
  // long hair behind face
  ellipse(0,-17,24,29,hair.color);drawRounded(-23,-20,47,45,17,hair.color);ellipse(-17,-18,13,26,hair.color);ellipse(17,-18,13,26,hair.color);
  // feet
@@ -408,8 +412,17 @@ function characterDraw(time){const stepSince=Math.min(1,(time-player.movedAt)/14
  // bangs
  ctx.beginPath();ctx.moveTo(-20,-42);ctx.quadraticCurveTo(-18,-58,0,-56);ctx.quadraticCurveTo(22,-58,22,-37);ctx.quadraticCurveTo(13,-48,8,-43);ctx.quadraticCurveTo(2,-46,-3,-43);ctx.quadraticCurveTo(-15,-37,-20,-42);ctx.fillStyle=hair.color;ctx.fill();ellipse(-12,-42,10,8,hair.light);
  // face
- if(player.face==='up'){ellipse(-9,-30,5,4,hair.light);ellipse(9,-30,5,4,hair.light)}else{let off=player.face==='left'?-3:player.face==='right'?3:0;ellipse(-8+off,-29,2.8,3.9,'#584650');ellipse(8+off,-29,2.8,3.9,'#584650');ellipse(-15,-23,5,2.6,'#eca9a8aa');ellipse(15,-23,5,2.6,'#eca9a8aa');ctx.beginPath();ctx.arc(off,-20,3,0,Math.PI);ctx.strokeStyle='#a76475';ctx.lineWidth=1.5;ctx.stroke()}
+ if(face==='up'){ellipse(-9,-30,5,4,hair.light);ellipse(9,-30,5,4,hair.light)}else{let off=face==='left'?-3:face==='right'?3:0;ellipse(-8+off,-29,2.8,3.9,'#584650');ellipse(8+off,-29,2.8,3.9,'#584650');ellipse(-15,-23,5,2.6,'#eca9a8aa');ellipse(15,-23,5,2.6,'#eca9a8aa');ctx.beginPath();ctx.arc(off,-20,3,0,Math.PI);ctx.strokeStyle='#a76475';ctx.lineWidth=1.5;ctx.stroke()}
  emoji('🎀',18,-53,20);ctx.restore()}
+
+function characterDraw(time){
+ const stepSince=Math.min(1,(time-player.movedAt)/145);
+ const easing=1-Math.pow(1-stepSince,3);
+ const x=(player.fromX+(player.x-player.fromX)*easing+.5)*TILE;
+ const y=(player.fromY+(player.y-player.fromY)*easing+.5)*TILE;
+ const bounce=stepSince<1?Math.sin(stepSince*Math.PI)*-6:Math.sin(time/700)*.8;
+ drawMarlenkaAvatar(x,y,1,player.face,bounce);
+}
 function townScene(time){
  const t=state.town;
  ctx.fillStyle='#d4ebcf';ctx.fillRect(0,0,W,H);
@@ -906,7 +919,7 @@ function driveScene(time){
 function targetMarkers(time){const q=currentQuest();for(const id of q.target){const o=sceneObjects().find(p=>p.id===id)||byId[id];if(!o)continue;const x=(o.x+.5)*TILE,y=(o.y-.2)*TILE;const h=10*Math.sin(time/340);ellipse(x,y+27,18,6,'#b9689c40');ellipse(x,y+h,21,21,'#fff7eb');ellipse(x,y+h,17,17,'#f2a6cc');emoji('✦',x,y+h+1,24)} }
 function render(time){elapsed=time;const mobile=matchMedia('(max-width: 600px)').matches,nw=mobile?576:960,nh=mobile?720:640;if(viewW!==nw||viewH!==nh){viewW=nw;viewH=nh;canvas.width=nw;canvas.height=nh}else if(canvas.width!==nw){canvas.width=nw;canvas.height=nh}
  cameraX=W>=viewW?Math.max(0,Math.min(W-viewW,(player.x+.5)*TILE-viewW/2)):(W-viewW)/2;cameraY=H>=viewH?Math.max(0,Math.min(H-viewH,(player.y+.5)*TILE-viewH/2)):(H-viewH)/2;
- ctx.clearRect(0,0,viewW,viewH);ctx.fillStyle='#f6deeb';ctx.fillRect(0,0,viewW,viewH);if(['drive','study','birthday','act4','act5'].includes(state.scene))cameraX=(W-viewW)/2;ctx.save();ctx.translate(-cameraX,-cameraY);if(state.scene==='act5')act5Scene(time);else if(state.scene==='act4')act4Scene(time);else if(state.scene==='act3')act3Scene(time);else if(state.scene==='birthday')birthdayScene(time);else if(state.scene==='study')studyScene(time);else if(state.scene==='drive')driveScene(time);else if(state.scene==='town')townScene(time);else if(state.scene==='alley')alleyScene(time);else{sceneBackground();furniture();catDraw(time)}if(!['drive','study','birthday','act4','act5'].includes(state.scene)){if(state.scene==='act3'){if(state.act3.zone!=='car'){if(state.act3.phase>=5&&state.act3.phase<=8)act3Person((player.fromX+(player.x-player.fromX)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,(player.fromY+(player.y-player.fromY)*Math.min(1,(time-player.movedAt)/145)+.5)*TILE,'kamis',1);else characterDraw(time)}}else characterDraw(time);targetMarkers(time)}ctx.restore();
+ ctx.clearRect(0,0,viewW,viewH);ctx.fillStyle='#f6deeb';ctx.fillRect(0,0,viewW,viewH);if(['drive','study','birthday','act4','act5'].includes(state.scene))cameraX=(W-viewW)/2;ctx.save();ctx.translate(-cameraX,-cameraY);if(state.scene==='act5')act5Scene(time);else if(state.scene==='act4')act4Scene(time);else if(state.scene==='act3')act3Scene(time);else if(state.scene==='birthday')birthdayScene(time);else if(state.scene==='study')studyScene(time);else if(state.scene==='drive')driveScene(time);else if(state.scene==='town')townScene(time);else if(state.scene==='alley')alleyScene(time);else{sceneBackground();furniture();catDraw(time)}if(!['drive','study','birthday','act4','act5'].includes(state.scene)){if(state.scene==='act3'){if(state.act3.zone!=='car'){characterDraw(time)}}else characterDraw(time);targetMarkers(time)}ctx.restore();
  if(!isLocked()){
   if(path.length&&time-lastStep>155){const next=path.shift();const dx=next[0]-player.x,dy=next[1]-player.y;const dir=Object.keys(dirs).find(k=>dirs[k][0]===dx&&dirs[k][1]===dy);if(dir)step(dir);else path=[];if(!path.length&&path.targetObject){const id=path.targetObject;delete path.targetObject;setTimeout(()=>{if(!isLocked()&&((sceneObjects().find(o=>o.id===id)||byId[id])&&distance(sceneObjects().find(o=>o.id===id)||byId[id])<=1.75))interact(id)},180)}}
   else if(pressed.size&&time-lastStep>165){const dir=[...pressed].at(-1);if(dirs[dir]){path=[];step(dir)}}
@@ -1019,7 +1032,7 @@ function act3Quest(){
  ['03','Zamówcie jedzenie','Podejdźcie do kasy i zdecydujcie, co zamówić.','a3order'],
  ['04','Usiądźcie z ekipą','Szymon, Piasek, Natalka i Karolina czekają przy stoliku.','a3table'],
  ['05','Porozmawiaj z Szymonem','Kamiś idzie po liquid do samochodu. Szymon chce dołączyć.','a3szymon'],
- ['06','W drogę!','Sterujesz Kamisiem. Wyjdź z restauracji.','a3exit'],
+ ['06','W drogę!','Sterujesz Marlenką. Towarzysz w wyprawie Kamisia i Szymona.','a3exit'],
  ['07','Liquid z samochodu','Podejdź do auta po liquid.','a3car'],
  ['08','Pytanie Szymona','W drodze powrotnej Szymon chce o coś zapytać.','a3road'],
  ['09','Wracajcie do Maka','Szymon dał się nabrać. Wróć do restauracji.','a3entry'],
@@ -1117,7 +1130,7 @@ function act3Interact(id){
   if(p===4)act3Dialogue([
    ['Szymon','Idziesz po liquid do auta? Mogę pójść z Tobą?'],
    ['Myśli Kamisia','Jako człowiek przystojny, odważny, śmiały i ponadprzeciętnie inteligentny — oczywiście się zgadzam.']
-  ],()=>{act3Phase(5);notify('Sterujesz teraz Kamisiem. Idź do wyjścia.')});
+  ],()=>{act3Phase(5);notify('Wciąż sterujesz Marlenką. Rusz do wyjścia razem z chłopakami.')});
   else say('Szymon jest z całą ekipą. Za chwilę może mieć kilka pytań.');
   return
  }
@@ -1172,6 +1185,7 @@ function act3Interact(id){
  if(friends[id]){act3Dialogue([friends[id],['Narrator','To dodatkowa rozmowa w grze — nie jest dosłownym zapisem tego, co powiedzieli znajomi.']]);return}
 }
 function act3Person(x,y,type,scale=1){
+ if(type==='marlena'){drawMarlenkaAvatar(x,y,scale*1.25,'down');return}
  const colors={
   kamis:['#9e7859','#627d9a','#f2c8af','#468bc9'],
   szymon:['#654e46','#8da7a0','#ebc3ad','#66636f'],
@@ -1290,7 +1304,7 @@ function act3Scene(time){
    drawRounded(378,24,224,30,10,'#fff8f3dd');ctx.textAlign='center';ctx.fillStyle='#885f7a';ctx.font='bold 16px system-ui';ctx.fillText('Czas na pożegnanie…',491,45);
   } else {
    if(p===1){act3Person(260,395,'kamis');act3Title('Kamiś',260,395)}
-   if((p===6||p===8))act3Person((player.x+.5)*TILE+55,(player.y+.5)*TILE+7,'szymon',.87);
+   if((p===6||p===8)){act3Person((player.x+.5)*TILE+39,(player.y+.5)*TILE+6,'kamis',.91);act3Person((player.x+.5)*TILE+81,(player.y+.5)*TILE+8,'szymon',.87)}
    if(p===7){act3Person(8.5*TILE,6.4*TILE,'szymon');act3Title('Szymon',8.5*TILE,6.4*TILE)}
   }
  }else {
