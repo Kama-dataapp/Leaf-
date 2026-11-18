@@ -910,8 +910,8 @@ function driveScene(time){
  line(439,358,435,402,'#dae6f1',5);drawRounded(451,416,48,9,4,'#bac1d2');
  for(const x of [264,681]){ellipse(x,474,45,45,'#23273a');ellipse(x,474,25,25,'#c1c3d1');ellipse(x,474,13,13,'#626e85')}
  ellipse(784,428,14,7,'#f8c8d0');ellipse(139,428,12,7,'#ffe1b5');
- ctx.save();ctx.translate(845,370);ellipse(0,80,23,8,'#0b173b66'); // the stylized Marlena outside
- drawRounded(-18,9,38,67,11,'#d8a0bd');line(-11,73,-13,93,'#f2d3c4',10);line(11,73,16,93,'#f2d3c4',10);line(-19,15,-32,49,'#f2d3c4',9);line(18,15,29,44,'#f2d3c4',9);ellipse(0,-7,28,35,'#68433e');ellipse(0,-5,22,25,'#f5ccb4');ellipse(0,-26,26,11,'#694940');ctx.restore();
+ // Marlenka przy samochodzie ma dokładnie ten sam model i kokardkę co w Akcie I.
+ drawMarlenkaAvatar(845,420,1.5,'down');
  if(d.stage===7){drawRounded(635,62,248,205,19,'#fff9f3','#e6d4d8',7);ctx.fillStyle='#f8edeb';ctx.fillRect(651,93,216,158);ctx.save();ctx.translate(660,98);ctx.scale(.36,.34);ellipse(500,336,95,98,'#d5bfd5');emoji('📸',510,310,108);ctx.restore();ctx.textAlign='center';ctx.font='bold 18px system-ui';ctx.fillStyle='#8b6682';ctx.fillText('Zdjęcie: gotowe ✓',759,290)}
  } else {
  // Inside Opel Insignia 2011 Business — stylized ivory leather interior
