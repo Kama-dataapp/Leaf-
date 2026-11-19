@@ -1647,6 +1647,90 @@ function act6Scene(time){
  drawRounded(274,25,412,53,13,'#fff9efde');ctx.font='bold 22px system-ui';ctx.textAlign='center';ctx.fillStyle='#775a72';ctx.fillText(water?'Spacery nad zalewem':'Spotkania gdzieś indziej',480,61);
 }
 
+
+// Akt III / Scena IV: Lenka, matematyka, napoje i lizaki. Rodzaje zabawy są umowną minigrą.
+function startAct7(){
+ if(!document.documentElement.classList.contains('marlenka-auth-granted')){window.MarlenkaAuthGate?.show?.();return}
+ if(!state.act6.finished){notify('Najpierw ukończ zalew i nocne powroty. 🌅');return}
+ for(const id of ['endingScreen','kissScreen','startScreen','panelModal','dialogOverlay'])$(id).hidden=true;
+ started=true;state.started=true;path=[];pressed.clear();state.scene='act7';state.act7.visited=true;
+ $('memoryOverlay').hidden=false;renderAct7UI();updateUI();save()
+}
+function act7Advance(n){
+ const a=state.act7;a.stage=Math.max(0,Math.min(9,n));
+ if(a.stage===9&&!a.finished){a.finished=true;if(!a.reward){a.reward=true;state.hearts+=40;sound('win')}}else sound('blip');
+ renderAct7UI();updateUI();save()
+}
+function act7Pick(key,value,next){state.act7[key]=value;act7Advance(next)}
+function act7View(view){state.act7.view=view;renderAct7UI();save()}
+function renderAct7UI(){
+ if(state.scene!=='act7')return;
+ const a=state.act7,st=Math.max(0,Math.min(9,a.stage));
+ $('memoryOverlay').hidden=false;$('memoryPrev').disabled=st===0;
+ $('memoryChapterTag').textContent='AKT III · SCENA IV — KORKI Z LENKĄ';
+ const steps=[
+ ['Narrator','🏠','Lenka dołącza do korepetycji','Na kolejnych korkach z matematyki w domu Kamisia zdarzało się, że pojawiała się jego młodsza siostra — Lenka. Dla niej wspólne spotkanie było też okazją do zabawy.'],
+ ['Kamiś','📐','Najpierw odrobina matematyki','Na kartce w grze jest równanie 4x + 8 = 28. Ile wynosi x?'],
+ ['Lenka','🌷','Pobawicie się ze mną?','Lenka zagląda do pokoju i chce, żeby Kamiś i Marlenka się z nią pobawili. Zeszyty muszą poczekać.'],
+ ['Marlenka i Kamiś','🎲','Przerwa na zabawę','Wybierz krótką zabawę w grze. To symboliczna minigra: nie przesądzamy, w co naprawdę bawiliście się z Lenką.'],
+ ['Narrator','😄','Chwile razem',a.play==='drawing'?'W tej wersji gry rysujecie wspólnie coś dla Lenki. Matematyka czeka, a Wy poświęcacie jej uwagę.':'W tej wersji gry próbujecie małej zgadywanki. Lenka cieszy się, że chcecie spędzić z nią czas.'],
+ ['Narrator','🥤','Mountain Dew dla Kamisia','Podczas takich spotkań Marlenka kupowała Kamisiowi Mountain Dew. Ta drobna niespodzianka została w jego wspomnieniach tak samo jak kolejne lekcje.'],
+ ['Lenka','🍭','Lizaki dla Lenki','Marlenka pamiętała również o Lence i kupowała jej lizaki. To nie musiał być jeden konkretny dzień — te małe gesty powtarzały się przy Waszych spotkaniach.'],
+ ['Narrator','📚','Matematyka i żarty',a.after==='joke'?'Jeszcze chwilę śmiejecie się razem z Lenką, po czym wracacie do zadań z matematyki.':'Po zabawie z Lenką wracacie do matematyki, ale przyjemna atmosfera zostaje.'],
+ ['Dwie perspektywy','💭','Kto co zapamiętał?',a.view==='marlena'?'Myśli Marlenki zostawiamy jej samej. Po zakończeniu sceny będzie mogła opisać, jak pamiętała Lenkę, korki i małe prezenty.':'Kamiś zapamiętał matematykę przeplataną zabawą z młodszą siostrą. Marlenka kupowała mu Mountain Dew, a Lence lizaki. Właśnie te drobne gesty były czymś miłym.'],
+ ['Księga Wspomnień','📖','Lenka, Mountain Dew i lizaki 💞','Podczas kolejnych korepetycji pojawiała się młodsza siostra Kamisia, Lenka, która chciała pobawić się z Kamisiem i Marlenką. Marlenka kupowała Kamisiowi Mountain Dew, a Lence lizaki. Scena została zakończona.']
+ ];
+ const p=steps[st];$('memoryProgress').textContent=(st+1)+' / 10';
+ $('memorySpeaker').replaceChildren();const icon=document.createElement('span');icon.className='portrait';icon.textContent=p[1];const who=document.createElement('span');who.textContent=p[0];$('memorySpeaker').append(icon,who);
+ $('memoryTitle').textContent=p[2];$('memoryText').textContent=p[3];
+ $('memoryActions').replaceChildren();$('memoryOptions').replaceChildren();$('memoryOptions').hidden=true;
+ const go=(n,label)=>driveOption(label,()=>act7Advance(n),true);
+ if(st===0)go(1,'📐 Zacznij od zadania');
+ if(st===1){driveOption('x = 4',()=>notify('4 × 4 + 8 = 24, spróbuj ponownie.'));driveOption('x = 5 ✓',()=>act7Pick('mathSolved',true,2),true);driveOption('x = 6',()=>notify('4 × 6 + 8 = 32, spróbuj ponownie.'))}
+ if(st===2)go(3,'🌷 Zróbcie przerwę dla Lenki');
+ if(st===3){driveOption('🎨 Wspólne rysowanie',()=>act7Pick('play','drawing',4),true);driveOption('🎲 Zgadywanka',()=>act7Pick('play','guess',4))}
+ if(st===4)go(5,'🥤 Drobne niespodzianki');
+ if(st===5)go(6,'🍭 Lizaki dla Lenki');
+ if(st===6){driveOption('😄 Jeszcze chwila śmiechu',()=>act7Pick('after','joke',7),true);driveOption('📚 Wróćcie do matematyki',()=>act7Pick('after','math',7))}
+ if(st===7)go(8,'💭 Zobacz dwie perspektywy');
+ if(st===8){$('memoryOptions').hidden=false;for(const [view,label]of [['kamis','💛 Kamiś'],['marlena','🌷 Marlenka']]){const b=document.createElement('button');b.textContent=label;b.className=a.view===view?'selected':'';b.onclick=()=>act7View(view);$('memoryOptions').append(b)}go(9,'📖 Zapisz i zakończ scenę')}
+ if(st===9){driveOption('💭 Dopisz myśli po scenie',()=>openThoughtEditor(),true);driveOption('🔁 Przeżyj te korepetycje jeszcze raz',()=>{a.stage=0;renderAct7UI();updateUI();save()});driveOption('🌊 Wróć do spacerów nad zalewem',startAct6)}
+ $('memoryNote').textContent=st===9?'Scena zakończona. Dopiero teraz możesz dopisać własne myśli.':'Zdarzenia opisują powracające spotkania. Wybrana zabawa to element gry, a myśli Marlenki można dopisać po scenie.';
+ refreshThoughtSnippet()
+}
+function act7Lenka(x,y){
+ ctx.save();ctx.translate(x,y);
+ ellipse(0,29,19,6,'#85637955');drawRounded(-14,5,12,27,4,'#8c84ae');drawRounded(3,5,12,27,4,'#8c84ae');
+ drawRounded(-21,-25,42,38,11,'#f3b9c9');ellipse(-22,-4,7,12,'#f1c5aa');ellipse(22,-4,7,12,'#f1c5aa');
+ ellipse(0,-45,22,24,'#f0cab1');ellipse(0,-64,24,13,'#856755');drawRounded(-22,-60,44,11,4,'#856755');
+ ellipse(-8,-46,3,3,'#5e5369');ellipse(8,-46,3,3,'#5e5369');
+ ctx.beginPath();ctx.arc(0,-38,7,0,Math.PI);ctx.strokeStyle='#9c6c83';ctx.lineWidth=2;ctx.stroke();
+ ctx.restore()
+}
+function act7Scene(time){
+ const st=state.act7.stage;
+ const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#efdbe3');sky.addColorStop(1,'#f9e7db');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ drawRounded(0,443,W,197,0,'#d8bcb1');
+ drawRounded(47,55,224,219,16,'#fff7ef','#c1a5b8',5);drawRounded(65,72,187,184,8,'#b7d8df');
+ line(158,73,158,258,'#fff8ed',6);line(69,162,249,162,'#fff8ed',6);
+ drawRounded(631,59,250,208,14,'#fff8f1','#c4abba',5);drawRounded(648,77,219,172,7,'#f9f4e7');
+ ctx.fillStyle='#806d89';ctx.font='bold 22px system-ui';ctx.textAlign='left';ctx.fillText('4x + 8 = 28',693,129);ctx.font='18px system-ui';ctx.fillText('x = ?',693,172);
+ for(let i=0;i<4;i++)drawRounded(322+i*58,91,39,82,4,i%2?'#b4c7c0':'#c5abbf');
+ drawRounded(186,378,580,146,28,'#bf9582');drawRounded(200,390,550,112,22,'#e6b99c');
+ drawRounded(218,516,20,78,5,'#94786e');drawRounded(716,516,20,78,5,'#94786e');
+ // Stali bohaterowie: oryginalny model Marlenki, elegancki Kamiś, mniejsza Lenka.
+ act3Person(329,348,'kamis',1.75);drawMarlenkaAvatar(622,344,2.15,'down');
+ if(st>=2)act7Lenka(484,458);
+ drawRounded(393,422,141,51,9,'#fff9f0','#d0bec9',3);line(406,435,520,435,'#b9a9c0',2);line(406,452,496,452,'#b9a9c0',2);
+ if(st>=3&&st<=4){drawRounded(746,407,90,86,9,'#eae1c4');ellipse(775,424,14,13,'#ecacc6');ellipse(805,453,11,11,'#a6d2c5')}
+ if(st>=5){
+  drawRounded(424,327,42,106,11,'#5c9a5e','#3f6949',3);drawRounded(432,320,26,10,4,'#c9d7c5');
+  ctx.save();ctx.translate(445,379);ctx.rotate(-Math.PI/2);ctx.fillStyle='#fff8db';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText('MOUNTAIN DEW',0,0);ctx.restore();
+  for(const [x,c]of [[551,'#e68ebb'],[574,'#9bd2c0']]){line(x,383,x,433,'#fff9f2',5);ellipse(x,380,18,18,c)}
+ }
+ drawRounded(299,20,364,44,13,'#fff9f2e6');ctx.textAlign='center';ctx.font='bold 19px system-ui';ctx.fillStyle='#86647c';ctx.fillText('Korki, Lenka i niespodzianki',481,49)
+}
+
 window.MarlenkaWorld={open:()=>startAct3(),progress:()=>({finished:state.act3.finished,phase:state.act3.phase})};
 function init(){setupInputs();setupThoughts();$('soundBtn').textContent=state.sound?'♪':'♪̸';if(state.scene==='drive'){$('memoryOverlay').hidden=false;renderDriveUI()}if(state.scene==='study'){$('memoryOverlay').hidden=false;renderStudyUI()}if(state.scene==='birthday'){$('memoryOverlay').hidden=false;renderBirthdayUI()}if(state.scene==='act4'){$('memoryOverlay').hidden=false;renderAct4UI()}if(state.scene==='act5'){$('memoryOverlay').hidden=false;renderAct5UI()}if(state.scene==='act6'){$('memoryOverlay').hidden=false;renderAct6UI()}if(state.started){$('startBtn').innerHTML='Kontynuuj przygodę <span>↗</span>';$('newFromStartBtn').hidden=false}else $('newFromStartBtn').hidden=true;updateUI();requestAnimationFrame(render);}
 window.MarlenkaBridge={getState:()=>state,save,birthdayFinished:()=>Boolean(state.birthday?.rideFinished),openAct3:()=>startAct3(),openAct4:()=>startAct4(),openAct5:()=>startAct5(),openAct6:()=>startAct6()};
